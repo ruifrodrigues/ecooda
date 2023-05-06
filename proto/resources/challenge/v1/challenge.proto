@@ -1,0 +1,86 @@
+syntax = "proto3";
+
+package challenge.v1;
+
+import "google/type/datetime.proto";
+import "google/api/annotations.proto";
+import "meta/v1/meta.proto";
+
+option go_package = "github.com/ruifrodrigues/ecooda;resources";
+
+message Location {
+  string continent = 1;
+  string country = 2;
+  string region = 3;
+  string city = 4;
+}
+
+message Challenge {
+  string uuid = 1;
+  string name = 2;
+  string description = 3;
+  string street = 4;
+  string postcode = 5;
+  Location location = 6;
+  float latitude = 7;
+  float longitude = 8;
+  string thumbnail = 9;
+  string gallery = 10;
+  google.type.DateTime created_at = 11;
+  google.type.DateTime updated_at = 12;
+}
+
+message GetChallengesRequest {}
+
+message GetChallengesResponse {
+  repeated Challenge data = 1;
+  meta.v1.Meta meta = 2;
+}
+
+message GetChallengeRequest {
+  string challenge_uuid = 1;
+}
+message GetChallengeResponse {}
+
+message PostChallengeRequest {}
+message PostChallengeResponse {}
+
+message PutChallengeRequest {
+  string challenge_uuid = 1;
+}
+message PutChallengeResponse {}
+
+message DeleteChallengeRequest {
+  string challenge_uuid = 1;
+}
+message DeleteChallengeResponse {}
+
+service ChallengeService {
+  rpc GetChallenges(GetChallengesRequest) returns (GetChallengesResponse) {
+    option (google.api.http) = {
+      get: "/challenges"
+    };
+  }
+  rpc GetChallenge(GetChallengeRequest) returns (GetChallengeResponse) {
+    option (google.api.http) = {
+      get: "/challenge/{challenge_uuid}"
+    };
+  }
+  rpc PostChallenge(PostChallengeRequest) returns (PostChallengeResponse) {
+    option (google.api.http) = {
+      post: "/challenge"
+      body: "*"
+    };
+  }
+  rpc PutChallenge(PutChallengeRequest) returns (PutChallengeResponse) {
+    option (google.api.http) = {
+      put: "/challenge/{challenge_uuid}"
+      body: "*"
+    };
+  }
+  rpc DeleteChallenge(DeleteChallengeRequest) returns (DeleteChallengeResponse) {
+    option (google.api.http) = {
+      delete: "/challenge/{challenge_uuid}"
+    };
+  }
+}

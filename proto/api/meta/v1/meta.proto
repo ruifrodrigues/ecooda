@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package meta.v1;
+
+option go_package = "github.com/ruifrodrigues/ecooda;api";
+
+enum ApiVersion {
+  API_VERSION_UNSPECIFIED = 0;
+  API_VERSION_1 = 1;
+}
+
+message Cursor {
+  int32 previous = 1;
+  int32 current = 2;
+  int32 next = 3;
+  int32 count = 4;
+}
+
+enum Method {
+  METHOD_UNSPECIFIED = 0;
+  METHOD_GET = 1;
+  METHOD_POST = 2;
+  METHOD_PUT = 3;
+  METHOD_DELETE = 4;
+}
+
+message Link {
+  string rel = 1;
+  string uri = 2;
+  Method method = 3;
+}
+
+message Meta {
+  ApiVersion api_version = 1;
+  Cursor cursor = 2;
+  repeated Link links = 3;
+}

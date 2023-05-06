@@ -1,0 +1,15 @@
+.circleci
+.git
+.gitignore
+.github
+.dockerignore
+charts/
+terraform/
+tmp/
+helmfile.yaml
+docker-compose.yml
+Dockerfile
+README.md
+schema.png
+service-account-config.json
+.netrc
