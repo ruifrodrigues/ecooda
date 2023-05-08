@@ -2,34 +2,51 @@ syntax = "proto3";
 
 package challenge.v1;
 
-import "google/type/datetime.proto";
 import "google/api/annotations.proto";
+import "link/v1/link.proto";
+import "location/v1/location.proto";
 import "meta/v1/meta.proto";
 
-option go_package = "github.com/ruifrodrigues/ecooda;resources";
+option go_package = "github.com/ruifrodrigues/ecooda/stubs/go/challenge/v1";
 
-message Location {
-  string continent = 1;
-  string country = 2;
-  string region = 3;
-  string city = 4;
+
+//------------------ RELATIONSHIPS -------------------------------------------------------------------------------------
+message Relationship {
+  oneof optional_category {
+    string name = 1;
+  }
 }
 
+
+//------------------ INCLUDES ------------------------------------------------------------------------------------------
+message Include {
+  oneof optional_location {
+    location.v1.Location location = 1;
+  }
+}
+
+
+//------------------ RESOURCE ------------------------------------------------------------------------------------------
 message Challenge {
   string uuid = 1;
   string name = 2;
   string description = 3;
   string street = 4;
   string postcode = 5;
-  Location location = 6;
-  float latitude = 7;
-  float longitude = 8;
-  string thumbnail = 9;
-  string gallery = 10;
-  google.type.DateTime created_at = 11;
-  google.type.DateTime updated_at = 12;
+  float latitude = 6;
+  float longitude = 7;
+  string thumbnail = 8;
+  string gallery = 9;
+  string created_at = 10 [json_name = "created_at"];
+  string updated_at = 11 [json_name = "updated_at"];
+
+  repeated Relationship relationships = 12 [json_name = "_relationships"];
+  repeated Include includes = 13 [json_name = "_includes"];
+  repeated link.v1.Link links = 14 [json_name = "_links"];
 }
 
+
+//------------------ Requests and Responses ----------------------------------------------------------------------------
 message GetChallengesRequest {}
 
 message GetChallengesResponse {
@@ -38,23 +55,27 @@ message GetChallengesResponse {
 }
 
 message GetChallengeRequest {
-  string challenge_uuid = 1;
+  string uuid = 1;
 }
 message GetChallengeResponse {}
 
-message PostChallengeRequest {}
+message PostChallengeRequest {
+  Challenge challenge = 1;
+}
 message PostChallengeResponse {}
 
 message PutChallengeRequest {
-  string challenge_uuid = 1;
+  string uuid = 1;
 }
 message PutChallengeResponse {}
 
 message DeleteChallengeRequest {
-  string challenge_uuid = 1;
+  string uuid = 1;
 }
 message DeleteChallengeResponse {}
 
+
+//------------------ RPC and HTTP routes  ------------------------------------------------------------------------------
 service ChallengeService {
   rpc GetChallenges(GetChallengesRequest) returns (GetChallengesResponse) {
     option (google.api.http) = {
@@ -63,24 +84,24 @@ service ChallengeService {
   }
   rpc GetChallenge(GetChallengeRequest) returns (GetChallengeResponse) {
     option (google.api.http) = {
-      get: "/challenge/{challenge_uuid}"
+      get: "/challenges/{uuid}"
     };
   }
   rpc PostChallenge(PostChallengeRequest) returns (PostChallengeResponse) {
     option (google.api.http) = {
-      post: "/challenge"
+      post: "/challenges"
       body: "*"
     };
   }
   rpc PutChallenge(PutChallengeRequest) returns (PutChallengeResponse) {
     option (google.api.http) = {
-      put: "/challenge/{challenge_uuid}"
+      put: "/challenges/{uuid}"
       body: "*"
     };
   }
   rpc DeleteChallenge(DeleteChallengeRequest) returns (DeleteChallengeResponse) {
     option (google.api.http) = {
-      delete: "/challenge/{challenge_uuid}"
+      delete: "/challenges/{uuid}"
     };
   }
 }

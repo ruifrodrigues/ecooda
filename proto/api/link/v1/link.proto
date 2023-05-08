@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package link.v1;
+
+option go_package = "github.com/ruifrodrigues/ecooda/stubs/go/link/v1";
+
+message Link {
+  string rel = 1;
+  string uri = 2;
+  string method = 3;
+
+  oneof optional_description {
+    string description = 4;
+  }
+}

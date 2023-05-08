@@ -6,6 +6,7 @@ managed:
     except:
       - buf.build/googleapis/googleapis
       - buf.build/ruifrodrigues/api
+      - buf.build/ruifrodrigues/resources
 plugins:
   - plugin: buf.build/protocolbuffers/go
     out: ../stubs/go
