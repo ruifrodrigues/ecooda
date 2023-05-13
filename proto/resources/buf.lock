@@ -9,5 +9,5 @@ deps:
   - remote: buf.build
     owner: ruifrodrigues
     repository: api
-    commit: b14f66b69afb4dc1994c4bc766850770
+    commit: ff836e08d3c146678a748fa9b228e259
     digest: shake256:2d154dde03245b5e97c76fa5d35fc8678383fbf27336296f386305fbc7ccb8dd2d630c749cd5ef470544a8311f4aebb23706e7826e35022207f7880dfe9137c1

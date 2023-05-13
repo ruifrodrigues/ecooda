@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/ruifrodrigues/ecooda/config"
 	challengev1 "github.com/ruifrodrigues/ecooda/stubs/go/challenge/v1"
 	"google.golang.org/grpc"
 	"log"
@@ -10,13 +11,13 @@ import (
 	"net/http"
 )
 
-func runHttpProxy() {
+func runHttpProxy(conf config.Config) {
 	ctx := context.Background()
 
 	// creating mux for gRPC gateway. This will multiplex or route request different gRPC service
 	mux := runtime.NewServeMux()
 
-	endpoint := "localhost:8080"
+	endpoint := "localhost" + conf.Values.GrpcPort
 	opts := []grpc.DialOption{grpc.WithInsecure()}
 
 	// setting up a dail up for gRPC service by specifying endpoint/target url
@@ -31,7 +32,7 @@ func runHttpProxy() {
 	}
 
 	// creating a listener for server
-	l, err := net.Listen("tcp", ":8081")
+	l, err := net.Listen("tcp", conf.Values.HttpPort)
 	if err != nil {
 		log.Fatal(err)
 	}

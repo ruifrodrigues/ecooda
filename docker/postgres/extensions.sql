@@ -1,0 +1,1 @@
+migrate -path services/challenge/migrations/ -database "mysql://admin:secret@tcp(ecooda-mysql-db-1:3306)/challenge" up

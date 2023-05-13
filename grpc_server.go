@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/ruifrodrigues/ecooda/config"
 	"github.com/ruifrodrigues/ecooda/services/challenge"
 	challengev1 "github.com/ruifrodrigues/ecooda/stubs/go/challenge/v1"
 	"google.golang.org/grpc"
@@ -8,16 +9,16 @@ import (
 	"net"
 )
 
-func runGrpcServer() {
+func runGrpcServer(conf config.Config) {
 	// create new gRPC server
 	server := grpc.NewServer()
 
 	// register the GreeterServerImpl on the gRPC server
-	challengev1.RegisterChallengeServiceServer(server, challenge.NewChallengeService())
+	challengev1.RegisterChallengeServiceServer(server, challenge.NewChallengeService(conf))
 
 	// start listening on port :8080 for a tcp connection
-	if l, err := net.Listen("tcp", ":8080"); err != nil {
-		log.Fatal("error in listening on port :8080", err)
+	if l, err := net.Listen("tcp", conf.Values.GrpcPort); err != nil {
+		log.Fatal("error in listening on port "+conf.Values.GrpcPort, err)
 	} else {
 		// the gRPC server
 		if err := server.Serve(l); err != nil {

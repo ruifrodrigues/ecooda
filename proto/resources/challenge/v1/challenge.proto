@@ -13,7 +13,7 @@ option go_package = "github.com/ruifrodrigues/ecooda/stubs/go/challenge/v1";
 //------------------ RELATIONSHIPS -------------------------------------------------------------------------------------
 message Relationship {
   oneof optional_category {
-    string name = 1;
+    string category = 1;
   }
 }
 
@@ -29,14 +29,39 @@ message Include {
 //------------------ RESOURCE ------------------------------------------------------------------------------------------
 message Challenge {
   string uuid = 1;
-  string name = 2;
-  string description = 3;
-  string street = 4;
-  string postcode = 5;
-  float latitude = 6;
-  float longitude = 7;
-  string thumbnail = 8;
-  string gallery = 9;
+
+  oneof optional_name {
+    string name = 2;
+  }
+
+  oneof optional_description {
+    string description = 3;
+  }
+
+  oneof optional_street {
+    string street = 4;
+  }
+
+  oneof optional_postcode {
+    string postcode = 5;
+  }
+
+  oneof optional_latitude {
+    float latitude = 6;
+  }
+
+  oneof optional_longitude {
+    float longitude = 7;
+  }
+
+  oneof optional_thumbnail {
+    string thumbnail = 8;
+  }
+
+  oneof optional_gallery {
+    string gallery = 9;
+  }
+
   string created_at = 10 [json_name = "created_at"];
   string updated_at = 11 [json_name = "updated_at"];
 
@@ -47,7 +72,9 @@ message Challenge {
 
 
 //------------------ Requests and Responses ----------------------------------------------------------------------------
-message GetChallengesRequest {}
+message GetChallengesRequest {
+  string fields = 1;
+}
 
 message GetChallengesResponse {
   repeated Challenge data = 1;

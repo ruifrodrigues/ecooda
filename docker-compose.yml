@@ -1,7 +1,7 @@
 version: "3.9"
 
 services:
-  ecooda:
+  backend:
     build:
       context: .
       dockerfile: Dockerfile
@@ -14,23 +14,26 @@ services:
     networks:
       - default
     ports:
-      - "8080:8080"
-      - "8081:8081"
+      - "80:80"
+      - "443:443"
+      - "50051:50051"
 
-  postgres:
-    image: postgres:alpine3.17
-    restart: always
+  mysql-db:
+    image: mysql:8
+    command: mysqld --default-authentication-plugin=mysql_native_password
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    ports:
-      - '5432:5432'
+      - MYSQL_DATABASE=challenge
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=secret
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - mysql-db-data:/var/lib/mysql
+    ports:
+      - "3307:3306"
 
 volumes:
-  ecooda-data:
-  postgres-data:
+  backend-data:
+  mysql-db-data:
 
 secrets:
   netrc:
