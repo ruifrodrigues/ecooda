@@ -1,164 +1,141 @@
 package challenge
 
 import (
+	"github.com/ruifrodrigues/ecooda/hateoas"
 	challengev1 "github.com/ruifrodrigues/ecooda/stubs/go/challenge/v1"
 	locationv1 "github.com/ruifrodrigues/ecooda/stubs/go/location/v1"
-	"gorm.io/gorm"
-	"strings"
 )
 
-var defaultFields = "uuid,{requested_fields},created_at,updated_at"
+const MaxLimit = 25
 
-func transformer(model *gorm.DB, req *challengev1.GetChallengesRequest) []*challengev1.Challenge {
-	var tmpChallenges []map[string]interface{}
-
-	fields := buildFields(req)
-
-	model.Select(fields).Find(&tmpChallenges)
-
-	items := collection(tmpChallenges)
-
-	includes(items)
-
-	return items
-}
-
-func buildFields(req *challengev1.GetChallengesRequest) string {
-	var fields string
-	if len(req.Fields) == 0 {
-		fields = strings.Replace(defaultFields, ",{requested_fields}", "", 1)
-	} else {
-		fields = strings.Replace(defaultFields, "{requested_fields}", req.Fields, 1)
+var (
+	DefaultFields = []string{
+		"uuid",
+		"created_at",
+		"updated_at",
 	}
 
-	return fields
-}
+	GuardedFields = []string{
+		"id",
+	}
+)
 
-func collection(tmpChallenges []map[string]interface{}) []*challengev1.Challenge {
-	var items []*challengev1.Challenge
+func Fields(resource *hateoas.Resource, field string) {
+	if field == "uuid" {
+		resource.Challenge.Uuid = resource.Tmp["uuid"].(string)
+	}
 
-	for _, tmpChallenge := range tmpChallenges {
-		challenge := &challengev1.Challenge{}
+	if field == "name" {
+		resource.Challenge.Name = resource.Tmp["name"].(string)
+	}
 
-		for fieldName, fieldValue := range tmpChallenge {
-			item(challenge, fieldName, fieldValue)
+	if field == "description" {
+		description := ""
+		if resource.Tmp["description"] != nil {
+			description = resource.Tmp["description"].(string)
 		}
-
-		items = append(items, challenge)
-	}
-
-	return items
-}
-
-func item(challenge *challengev1.Challenge, fieldName string, fieldValue interface{}) {
-	if fieldName == "uuid" {
-		challenge.Uuid = fieldValue.(string)
-	}
-
-	if fieldName == "name" {
-		challenge.OptionalName = &challengev1.Challenge_Name{
-			Name: fieldValue.(string),
+		resource.Challenge.OptionalDescription = &challengev1.Challenge_Description{
+			Description: description,
 		}
 	}
 
-	if fieldName == "description" {
-		challenge.OptionalDescription = &challengev1.Challenge_Description{
-			Description: fieldValue.(string),
+	if field == "street" {
+		street := ""
+		if resource.Tmp["street"] != nil {
+			street = resource.Tmp["street"].(string)
+		}
+
+		resource.Challenge.OptionalStreet = &challengev1.Challenge_Street{
+			Street: street,
 		}
 	}
 
-	if fieldName == "street" {
-		val := ""
-		if fieldValue != nil {
-			val = fieldValue.(string)
+	if field == "postcode" {
+		postcode := ""
+		if resource.Tmp["postcode"] != nil {
+			postcode = resource.Tmp["postcode"].(string)
 		}
 
-		challenge.OptionalStreet = &challengev1.Challenge_Street{
-			Street: val,
-		}
-	}
-
-	if fieldName == "postcode" {
-		val := ""
-		if fieldValue != nil {
-			val = fieldValue.(string)
-		}
-
-		challenge.OptionalPostcode = &challengev1.Challenge_Postcode{
-			Postcode: val,
+		resource.Challenge.OptionalPostcode = &challengev1.Challenge_Postcode{
+			Postcode: postcode,
 		}
 	}
 
-	if fieldName == "latitude" {
-		var val float32 = 0.0
-		if fieldValue != nil {
-			val = fieldValue.(float32)
+	if field == "latitude" {
+		var latitude float32 = 0.0
+		if resource.Tmp["latitude"] != nil {
+			latitude = resource.Tmp["latitude"].(float32)
 		}
 
-		challenge.OptionalLatitude = &challengev1.Challenge_Latitude{
-			Latitude: val,
-		}
-	}
-
-	if fieldName == "longitude" {
-		var val float32 = 0.0
-		if fieldValue != nil {
-			val = fieldValue.(float32)
-		}
-
-		challenge.OptionalLongitude = &challengev1.Challenge_Longitude{
-			Longitude: val,
+		resource.Challenge.OptionalLatitude = &challengev1.Challenge_Latitude{
+			Latitude: latitude,
 		}
 	}
 
-	if fieldName == "thumbnail" {
-		val := ""
-		if fieldValue != nil {
-			val = fieldValue.(string)
+	if field == "longitude" {
+		var longitude float32 = 0.0
+		if resource.Tmp["longitude"] != nil {
+			longitude = resource.Tmp["longitude"].(float32)
 		}
 
-		challenge.OptionalThumbnail = &challengev1.Challenge_Thumbnail{
-			Thumbnail: val,
-		}
-	}
-
-	if fieldName == "gallery" {
-		val := ""
-		if fieldValue != nil {
-			val = fieldValue.(string)
-		}
-
-		challenge.OptionalGallery = &challengev1.Challenge_Gallery{
-			Gallery: val,
+		resource.Challenge.OptionalLongitude = &challengev1.Challenge_Longitude{
+			Longitude: longitude,
 		}
 	}
 
-	if fieldName == "created_at" {
-		challenge.CreatedAt = fieldValue.(string)
+	if field == "thumbnail" {
+		thumbnail := ""
+		if resource.Tmp["thumbnail"] != nil {
+			thumbnail = resource.Tmp["thumbnail"].(string)
+		}
+
+		resource.Challenge.OptionalThumbnail = &challengev1.Challenge_Thumbnail{
+			Thumbnail: thumbnail,
+		}
 	}
 
-	if fieldName == "updated_at" {
-		challenge.UpdatedAt = fieldValue.(string)
+	if field == "gallery" {
+		gallery := ""
+		if resource.Tmp["gallery"] != nil {
+			gallery = resource.Tmp["gallery"].(string)
+		}
+
+		resource.Challenge.OptionalGallery = &challengev1.Challenge_Gallery{
+			Gallery: gallery,
+		}
+	}
+
+	if field == "created_at" {
+		resource.Challenge.CreatedAt = resource.Tmp["created_at"].(string)
+	}
+
+	if field == "updated_at" {
+		resource.Challenge.UpdatedAt = resource.Tmp["updated_at"].(string)
 	}
 }
 
-func includes(items []*challengev1.Challenge) {
-	includes := []*challengev1.Include{
-		{
-			OptionalLocation: &challengev1.Include_Location{
-				Location: &locationv1.Location{
-					Uuid:      "",
-					Continent: "Europe",
-					Country:   "Portugal",
-					Region:    "Lisbon Metro Area",
-					City:      "Lisbon",
+func Includes(resource *hateoas.Resource, includes []string) {
+	if len(includes) == 0 {
+		return
+	}
+
+	var includeList []*challengev1.Include
+
+	for _, include := range includes {
+		if include == "locations" {
+			includeList = append(includeList, &challengev1.Include{
+				OptionalLocation: &challengev1.Include_Location{
+					Location: &locationv1.Location{
+						Uuid:      "",
+						Continent: "Europe",
+						Country:   "Portugal",
+						Region:    "Lisbon Metro Area",
+						City:      "Lisbon",
+					},
 				},
-			},
-		},
+			})
+		}
 	}
 
-	// Add Includes
-	for _, item := range items {
-		item.Includes = includes
-	}
+	resource.Challenge.Includes = includeList
 }
