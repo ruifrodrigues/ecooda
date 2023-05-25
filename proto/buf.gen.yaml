@@ -5,8 +5,7 @@ managed:
     default: github.com/ruifrodrigues/ecooda
     except:
       - buf.build/googleapis/googleapis
-      - buf.build/ruifrodrigues/api
-      - buf.build/ruifrodrigues/resources
+      - buf.build/ruifrodrigues/ecooda
 plugins:
   - plugin: buf.build/protocolbuffers/go
     out: ../stubs/go

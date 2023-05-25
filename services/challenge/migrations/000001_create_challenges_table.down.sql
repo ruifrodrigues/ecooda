@@ -1,1 +1,1 @@
-DROP TABLE IF EXISTS challenge;
+DROP TABLE IF EXISTS challenges;

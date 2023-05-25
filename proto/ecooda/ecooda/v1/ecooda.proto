@@ -1,0 +1,316 @@
+syntax = "proto3";
+
+package ecooda.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "github.com/ruifrodrigues/ecooda/stubs/go/ecooda/v1";
+
+message Cursor {
+  int32 previous = 1;
+  int32 current = 2;
+  int32 next = 3;
+  int32 count = 4;
+}
+
+message Meta {
+  oneof optional_cursor {
+    Cursor cursor = 1;
+  }
+
+  oneof optional_fields {
+    string fields = 2;
+  }
+}
+
+//------------------ RESOURCE ------------------------------------------------------------------------------------------
+message Category {
+  string uuid = 1;
+
+  oneof optional_name {
+    string name = 2;
+  }
+
+  string created_at = 3 [json_name = "created_at"];
+  string updated_at = 4 [json_name = "updated_at"];
+}
+
+message Categories {
+  repeated Category data = 1;
+}
+
+message Challenge {
+  string uuid = 1;
+
+  oneof optional_name {
+    string name = 2;
+  }
+
+  oneof optional_description {
+    string description = 3;
+  }
+
+  oneof optional_street {
+    string street = 4;
+  }
+
+  oneof optional_postcode {
+    string postcode = 5;
+  }
+
+  oneof optional_latitude {
+    float latitude = 6;
+  }
+
+  oneof optional_longitude {
+    float longitude = 7;
+  }
+
+  oneof optional_thumbnail {
+    string thumbnail = 8;
+  }
+
+  oneof optional_gallery {
+    string gallery = 9;
+  }
+
+  string created_at = 10 [json_name = "created_at"];
+
+  string updated_at = 11 [json_name = "updated_at"];
+
+  oneof optional_categories {
+    Categories categories = 12;
+  }
+}
+
+//------------------ Requests and Responses ----------------------------------------------------------------------------
+message GetChallengesRequest {
+  oneof optional_fields {
+    string fields = 1;
+  }
+
+  oneof optional_page_size {
+    int32 page_size = 2;
+  }
+
+  oneof optional_page {
+    int32 page = 3;
+  }
+
+  oneof optional_sort {
+    string sort = 4;
+  }
+}
+
+message GetChallengesResponse {
+  repeated Challenge data = 1;
+  Meta meta = 2;
+}
+
+message GetChallengeRequest {
+  string uuid = 1;
+
+  oneof optional_fields {
+    string fields = 2;
+  }
+
+  oneof optional_includes {
+    string includes = 3;
+  }
+
+  oneof optional_relationships {
+    string relationships = 4;
+  }
+}
+
+message GetChallengeResponse {
+  Challenge data = 1;
+  Meta meta = 2;
+}
+
+message PostChallengeRequest {
+  string name = 1;
+
+  string description = 2;
+
+  string street = 3;
+
+  string postcode = 4;
+
+  float latitude = 5;
+
+  float longitude = 6;
+
+  string thumbnail = 7;
+
+  string gallery = 8;
+}
+
+message PostChallengeResponse {}
+
+message PutChallengeRequest {
+  string uuid = 1;
+
+  string name = 2;
+
+  string description = 3;
+
+  string street = 4;
+
+  string postcode = 5;
+
+  float latitude = 6;
+
+  float longitude = 7;
+
+  string thumbnail = 8;
+
+  string gallery = 9;
+}
+
+message PutChallengeResponse {}
+
+message DeleteChallengeRequest {
+  string uuid = 1;
+}
+
+message DeleteChallengeResponse {}
+
+message CommandChallengeRequest {
+  string uuid = 1;
+
+  string categoryUuid = 2;
+
+  string command = 3;
+}
+
+message CommandChallengeResponse {}
+
+message GetCategoriesRequest {
+  oneof optional_fields {
+    string fields = 1;
+  }
+
+  oneof optional_page_size {
+    int32 page_size = 2;
+  }
+
+  oneof optional_page {
+    int32 page = 3;
+  }
+
+  oneof optional_sort {
+    string sort = 4;
+  }
+}
+
+message GetCategoriesResponse {
+  repeated Category data = 1;
+  Meta meta = 2;
+}
+
+message GetCategoryRequest {
+  string uuid = 1;
+
+  oneof optional_fields {
+    string fields = 2;
+  }
+
+  oneof optional_includes {
+    string includes = 3;
+  }
+
+  oneof optional_relationships {
+    string relationships = 4;
+  }
+}
+
+message GetCategoryResponse {
+  Category data = 1;
+  Meta meta = 2;
+}
+
+message PostCategoryRequest {
+  string name = 1;
+}
+
+message PostCategoryResponse {}
+
+message PutCategoryRequest {
+  string uuid = 1;
+
+  string name = 2;
+}
+
+message PutCategoryResponse {}
+
+message DeleteCategoryRequest {
+  string uuid = 1;
+}
+
+message DeleteCategoryResponse {}
+
+//------------------ RPC and HTTP routes  ------------------------------------------------------------------------------
+service ChallengeService {
+  rpc GetChallenges(GetChallengesRequest) returns (GetChallengesResponse) {
+    option (google.api.http) = {
+      get: "/challenges"
+    };
+  }
+  rpc GetChallenge(GetChallengeRequest) returns (GetChallengeResponse) {
+    option (google.api.http) = {
+      get: "/challenges/{uuid}"
+    };
+  }
+  rpc PostChallenge(PostChallengeRequest) returns (PostChallengeResponse) {
+    option (google.api.http) = {
+      post: "/challenges"
+      body: "*"
+    };
+  }
+  rpc PutChallenge(PutChallengeRequest) returns (PutChallengeResponse) {
+    option (google.api.http) = {
+      put: "/challenges/{uuid}"
+      body: "*"
+    };
+  }
+  rpc DeleteChallenge(DeleteChallengeRequest) returns (DeleteChallengeResponse) {
+    option (google.api.http) = {
+      delete: "/challenges/{uuid}"
+    };
+  }
+  rpc CommandChallenge(CommandChallengeRequest) returns (CommandChallengeResponse) {
+    option (google.api.http) = {
+      post: "/challenges/{uuid}/{command}"
+      body: "*"
+    };
+  }
+
+  rpc GetCategories(GetCategoriesRequest) returns (GetCategoriesResponse) {
+    option (google.api.http) = {
+      get: "/categories"
+    };
+  }
+  rpc GetCategory(GetCategoryRequest) returns (GetCategoryResponse) {
+    option (google.api.http) = {
+      get: "/categories/{uuid}"
+    };
+  }
+  rpc PostCategory(PostCategoryRequest) returns (PostCategoryResponse) {
+    option (google.api.http) = {
+      post: "/categories"
+      body: "*"
+    };
+  }
+  rpc PutCategory(PutCategoryRequest) returns (PutCategoryResponse) {
+    option (google.api.http) = {
+      put: "/categories/{uuid}"
+      body: "*"
+    };
+  }
+  rpc DeleteCategory(DeleteCategoryRequest) returns (DeleteCategoryResponse) {
+    option (google.api.http) = {
+      delete: "/categories/{uuid}"
+    };
+  }
+}

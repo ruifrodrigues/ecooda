@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/ruifrodrigues/ecooda/config"
-	challengev1 "github.com/ruifrodrigues/ecooda/stubs/go/challenge/v1"
+	pb "github.com/ruifrodrigues/ecooda/stubs/go/ecooda/v1"
 	"google.golang.org/grpc"
 	"log"
 	"net"
@@ -21,7 +21,7 @@ func runHttpProxy(conf config.Config) {
 	opts := []grpc.DialOption{grpc.WithInsecure()}
 
 	// setting up a dail up for gRPC service by specifying endpoint/target url
-	err := challengev1.RegisterChallengeServiceHandlerFromEndpoint(ctx, mux, endpoint, opts)
+	err := pb.RegisterChallengeServiceHandlerFromEndpoint(ctx, mux, endpoint, opts)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -42,4 +42,7 @@ func runHttpProxy(conf config.Config) {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// close DB connection
+	_ = conf.Database.CloseConnection()
 }

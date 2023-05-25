@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/ruifrodrigues/ecooda/config"
 	"github.com/ruifrodrigues/ecooda/services/challenge"
-	challengev1 "github.com/ruifrodrigues/ecooda/stubs/go/challenge/v1"
+	ecoodav1 "github.com/ruifrodrigues/ecooda/stubs/go/ecooda/v1"
 	"google.golang.org/grpc"
 	"log"
 	"net"
@@ -14,7 +14,7 @@ func runGrpcServer(conf config.Config) {
 	server := grpc.NewServer()
 
 	// register the GreeterServerImpl on the gRPC server
-	challengev1.RegisterChallengeServiceServer(server, challenge.NewChallengeService(conf))
+	ecoodav1.RegisterChallengeServiceServer(server, challenge.NewChallengeService(conf))
 
 	// start listening on port :8080 for a tcp connection
 	if l, err := net.Listen("tcp", conf.Values.GrpcPort); err != nil {

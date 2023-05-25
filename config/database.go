@@ -63,7 +63,7 @@ func (d Dialer) Dial() gorm.Dialector {
 
 func NewMySQLDialer(conf Config) IDialer {
 	return Dialer{
-		DSN: fmt.Sprintf("%s:%s@tcp(%s:%s)/%s",
+		DSN: fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 			conf.Values.DBUsername,
 			conf.Values.DBPassword,
 			conf.Values.DBHost,
