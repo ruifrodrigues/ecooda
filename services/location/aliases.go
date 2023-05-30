@@ -21,6 +21,7 @@ type (
 	PbPostLocationRequest  = pb.PostLocationRequest
 	PbPostLocationResponse = pb.PostLocationResponse
 	PbLocationName         = pb.Location_Name
-	PbLocationParent       = pb.Location_Parent
+	PbLocationParents      = pb.Location_Parents
 	PbLocationType         = pb.Location_Type
+	PbParents              = pb.Parents
 )

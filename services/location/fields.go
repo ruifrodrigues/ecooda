@@ -50,11 +50,18 @@ func locationFields(dbCtx Database, records []*Location, fields []string, limit 
 					item.UpdatedAt = record.UpdatedAt.String()
 				}
 
-				if field == "parent" {
+				if field == "parents" {
+					var location *Location
+					pbParents := &PbParents{Data: nil}
+					item.OptionalParents = &PbLocationParents{}
+
 					if record.ParentID != 0 {
-						location := &Location{}
 						dbCtx.Where(record.ParentID).First(&location)
-						item.OptionalParent = parentLocation(dbCtx, location)
+						parents(dbCtx, location, pbParents)
+
+						item.OptionalParents = &PbLocationParents{
+							Parents: pbParents,
+						}
 					}
 				}
 			}
@@ -72,30 +79,28 @@ func locationFields(dbCtx Database, records []*Location, fields []string, limit 
 	return data
 }
 
-func parentLocation(dbCtx Database, l *Location) *PbLocationParent {
-	location := &PbLocationParent{
-		Parent: &pb.Parent{
-			Data: &PbLocation{
-				Uuid: l.UUID.String(),
-				OptionalName: &PbLocationName{
-					Name: l.Name,
-				},
-				OptionalType: &PbLocationType{
-					Type: pb.LocationType(l.Type),
-				},
-				CreatedAt: l.CreatedAt.String(),
-				UpdatedAt: l.UpdatedAt.String(),
-			},
+func parents(dbCtx Database, record *Location, pbParents *PbParents) {
+	pbLocation := &PbLocation{
+		Uuid: record.UUID.String(),
+		OptionalName: &PbLocationName{
+			Name: record.Name,
 		},
+		OptionalType: &PbLocationType{
+			Type: pb.LocationType(record.Type),
+		},
+		CreatedAt: record.CreatedAt.String(),
+		UpdatedAt: record.UpdatedAt.String(),
 	}
 
-	if l.ParentID != 0 {
-		p := &Location{}
-		result := dbCtx.Where(l.ParentID).First(&p)
-		if result.Error == nil {
-			location.Parent.Data.OptionalParent = parentLocation(dbCtx, p)
-		}
+	pbParents.Data = append(pbParents.Data, pbLocation)
+
+	if record.ParentID == 0 {
+		return
 	}
 
-	return location
+	var location *Location
+	result := dbCtx.Where(record.ParentID).First(&location)
+	if result.Error == nil {
+		parents(dbCtx, location, pbParents)
+	}
 }

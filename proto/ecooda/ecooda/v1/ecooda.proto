@@ -34,8 +34,8 @@ enum LocationType {
   LOCATION_TYPE_CITY = 4;
 }
 
-message Parent {
-  Location data = 1;
+message Parents {
+  repeated Location data = 1;
 }
 
 message Location {
@@ -52,8 +52,8 @@ message Location {
   string created_at = 4 [json_name = "created_at"];
   string updated_at = 5 [json_name = "updated_at"];
 
-  oneof optional_parent {
-    Parent parent = 6;
+  oneof optional_parents {
+    Parents parents = 6;
   }
 }
 

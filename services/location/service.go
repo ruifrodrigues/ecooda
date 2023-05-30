@@ -34,7 +34,7 @@ func NewLocationService(conf Config) *Service {
 			"uuid",
 			"name",
 			"type",
-			"parent",
+			"parents",
 			"created_at",
 			"updated_at",
 		},
