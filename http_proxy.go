@@ -21,8 +21,11 @@ func runHttpProxy(conf config.Config) {
 	opts := []grpc.DialOption{grpc.WithInsecure()}
 
 	// setting up a dail up for gRPC service by specifying endpoint/target url
-	err := pb.RegisterChallengeServiceHandlerFromEndpoint(ctx, mux, endpoint, opts)
-	if err != nil {
+	if err := pb.RegisterChallengeServiceHandlerFromEndpoint(ctx, mux, endpoint, opts); err != nil {
+		log.Fatal(err)
+	}
+
+	if err := pb.RegisterLocationServiceHandlerFromEndpoint(ctx, mux, endpoint, opts); err != nil {
 		log.Fatal(err)
 	}
 

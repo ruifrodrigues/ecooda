@@ -19,6 +19,170 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
+	LocationService_GetLocations_FullMethodName = "/ecooda.v1.LocationService/GetLocations"
+	LocationService_GetLocation_FullMethodName  = "/ecooda.v1.LocationService/GetLocation"
+	LocationService_PostLocation_FullMethodName = "/ecooda.v1.LocationService/PostLocation"
+)
+
+// LocationServiceClient is the client API for LocationService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type LocationServiceClient interface {
+	GetLocations(ctx context.Context, in *GetLocationsRequest, opts ...grpc.CallOption) (*GetLocationsResponse, error)
+	GetLocation(ctx context.Context, in *GetLocationRequest, opts ...grpc.CallOption) (*GetLocationResponse, error)
+	PostLocation(ctx context.Context, in *PostLocationRequest, opts ...grpc.CallOption) (*PostLocationResponse, error)
+}
+
+type locationServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewLocationServiceClient(cc grpc.ClientConnInterface) LocationServiceClient {
+	return &locationServiceClient{cc}
+}
+
+func (c *locationServiceClient) GetLocations(ctx context.Context, in *GetLocationsRequest, opts ...grpc.CallOption) (*GetLocationsResponse, error) {
+	out := new(GetLocationsResponse)
+	err := c.cc.Invoke(ctx, LocationService_GetLocations_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *locationServiceClient) GetLocation(ctx context.Context, in *GetLocationRequest, opts ...grpc.CallOption) (*GetLocationResponse, error) {
+	out := new(GetLocationResponse)
+	err := c.cc.Invoke(ctx, LocationService_GetLocation_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *locationServiceClient) PostLocation(ctx context.Context, in *PostLocationRequest, opts ...grpc.CallOption) (*PostLocationResponse, error) {
+	out := new(PostLocationResponse)
+	err := c.cc.Invoke(ctx, LocationService_PostLocation_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// LocationServiceServer is the server API for LocationService service.
+// All implementations must embed UnimplementedLocationServiceServer
+// for forward compatibility
+type LocationServiceServer interface {
+	GetLocations(context.Context, *GetLocationsRequest) (*GetLocationsResponse, error)
+	GetLocation(context.Context, *GetLocationRequest) (*GetLocationResponse, error)
+	PostLocation(context.Context, *PostLocationRequest) (*PostLocationResponse, error)
+	mustEmbedUnimplementedLocationServiceServer()
+}
+
+// UnimplementedLocationServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedLocationServiceServer struct {
+}
+
+func (UnimplementedLocationServiceServer) GetLocations(context.Context, *GetLocationsRequest) (*GetLocationsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetLocations not implemented")
+}
+func (UnimplementedLocationServiceServer) GetLocation(context.Context, *GetLocationRequest) (*GetLocationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetLocation not implemented")
+}
+func (UnimplementedLocationServiceServer) PostLocation(context.Context, *PostLocationRequest) (*PostLocationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PostLocation not implemented")
+}
+func (UnimplementedLocationServiceServer) mustEmbedUnimplementedLocationServiceServer() {}
+
+// UnsafeLocationServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to LocationServiceServer will
+// result in compilation errors.
+type UnsafeLocationServiceServer interface {
+	mustEmbedUnimplementedLocationServiceServer()
+}
+
+func RegisterLocationServiceServer(s grpc.ServiceRegistrar, srv LocationServiceServer) {
+	s.RegisterService(&LocationService_ServiceDesc, srv)
+}
+
+func _LocationService_GetLocations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetLocationsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LocationServiceServer).GetLocations(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LocationService_GetLocations_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LocationServiceServer).GetLocations(ctx, req.(*GetLocationsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _LocationService_GetLocation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetLocationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LocationServiceServer).GetLocation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LocationService_GetLocation_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LocationServiceServer).GetLocation(ctx, req.(*GetLocationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _LocationService_PostLocation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostLocationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LocationServiceServer).PostLocation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LocationService_PostLocation_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LocationServiceServer).PostLocation(ctx, req.(*PostLocationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// LocationService_ServiceDesc is the grpc.ServiceDesc for LocationService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var LocationService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "ecooda.v1.LocationService",
+	HandlerType: (*LocationServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetLocations",
+			Handler:    _LocationService_GetLocations_Handler,
+		},
+		{
+			MethodName: "GetLocation",
+			Handler:    _LocationService_GetLocation_Handler,
+		},
+		{
+			MethodName: "PostLocation",
+			Handler:    _LocationService_PostLocation_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "ecooda/v1/ecooda.proto",
+}
+
+const (
 	ChallengeService_GetChallenges_FullMethodName    = "/ecooda.v1.ChallengeService/GetChallenges"
 	ChallengeService_GetChallenge_FullMethodName     = "/ecooda.v1.ChallengeService/GetChallenge"
 	ChallengeService_PostChallenge_FullMethodName    = "/ecooda.v1.ChallengeService/PostChallenge"

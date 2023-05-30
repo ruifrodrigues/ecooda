@@ -2,8 +2,6 @@ package api
 
 import (
 	pb "github.com/ruifrodrigues/ecooda/stubs/go/ecooda/v1"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 	"gorm.io/gorm"
 	"math"
 )
@@ -12,18 +10,15 @@ type Cursor struct {
 	*pb.Cursor
 }
 
-func NewCursor[T Bag](model *gorm.DB, req *RequestBag[T]) (*Cursor, error) {
+func NewCursor(model *gorm.DB, page, pageSize, maxLimit int32) (*Cursor, error) {
 	cursor := &Cursor{
 		&pb.Cursor{},
 	}
-	cursor.Count = generateCount(model)
-	cursor.Previous = generatePrevious(req)
-	cursor.Current = generateCurrent(req)
-	cursor.Next = generateNext(cursor.Count, req)
 
-	if cursor.Current == cursor.Next {
-		return nil, status.Error(codes.ResourceExhausted, "No more items available")
-	}
+	cursor.Count = generateCount(model)
+	cursor.Previous = generatePrevious(page)
+	cursor.Current = generateCurrent(page)
+	cursor.Next = generateNext(cursor.Count, cursor.Current, pageSize, maxLimit)
 
 	return cursor, nil
 }
@@ -35,9 +30,8 @@ func generateCount(model *gorm.DB) int32 {
 	return int32(count)
 }
 
-func generatePrevious[T Bag](req *RequestBag[T]) int32 {
-
-	currentPage := int(req.GetPage())
+func generatePrevious(page int32) int32 {
+	currentPage := int(page)
 
 	if currentPage <= 0 {
 		return 0
@@ -46,21 +40,23 @@ func generatePrevious[T Bag](req *RequestBag[T]) int32 {
 	return int32(currentPage - 1)
 }
 
-func generateCurrent[T Bag](req *RequestBag[T]) int32 {
-	return req.GetPage()
+func generateCurrent(page int32) int32 {
+	if page == 0 {
+		return 1
+	}
+
+	return page
 }
 
-func generateNext[T Bag](count int32, req *RequestBag[T]) int32 {
-	currentPage := int(req.GetPage())
-	nextPage := int(math.Ceil(float64(count) / float64(req.GetPageSize())))
+func generateNext(count, page, pageSize, maxLimit int32) int32 {
+	size := size(pageSize, maxLimit)
+	currentPage := int(page)
+	nextPage := currentPage + 1
+	maxPages := int(math.Ceil(float64(count) / float64(size)))
 
-	if currentPage == nextPage {
+	if currentPage >= maxPages {
 		return 0
 	}
 
-	if currentPage > nextPage {
-		return int32(currentPage)
-	}
-
-	return int32(currentPage + 1)
+	return int32(nextPage)
 }

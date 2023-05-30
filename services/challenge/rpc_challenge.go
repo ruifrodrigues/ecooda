@@ -23,33 +23,31 @@ func (s *Service) GetChallenges(ctx Context, req *PbGetChallengesRequest) (*PbGe
 		case <-ctx.Done():
 			return nil, status.Error(codes.DeadlineExceeded, "Connection Timeout")
 		default:
+			var maxLimit int32 = 25
 			var records []*Challenge
 
-			request := api.NewChallengesRequest(req)
-			bag := api.NewRequestBag(request)
-			offset := api.Offset(bag)
-			limit := api.Limit(bag, 25)
-			order := api.Sort(bag, allowedSorts)
-
 			model := s.dbCtx.Model(&Challenge{})
-
-			cursor, err := api.NewCursor(model, bag)
+			cursor, err := api.NewCursor(model, req.GetPage(), req.GetPageSize(), maxLimit)
 			if err != nil {
 				return nil, err
 			}
+
+			offset := api.Offset(req.GetPage(), req.GetPageSize(), maxLimit)
+			limit := api.Limit(req.GetPageSize(), maxLimit)
+			order := api.Sort(req.GetSort(), allowedSorts)
 
 			s.dbCtx.Preload("Categories").Offset(offset).Limit(limit).Order(order).Find(&records)
 			if len(records) == 0 {
 				return nil, status.Error(codes.NotFound, "No records available")
 			}
 
-			requestedFields := api.RequestedFields(bag, s.fields.Challenge)
+			requestedFields := api.RequestedFields(req.GetFields(), s.fields.Challenge)
 			availableFields := s.fields.Challenge.Available
 
 			_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "200"))
 
 			return &PbGetChallengesResponse{
-				Data: challengeFields(records, requestedFields, 25),
+				Data: challengeFields(records, requestedFields, maxLimit),
 				Meta: api.NewMeta().AddCursor(cursor).AddFields(availableFields).Meta,
 			}, nil
 		}
@@ -80,9 +78,7 @@ func (s *Service) GetChallenge(ctx Context, req *PbGetChallengeRequest) (*PbGetC
 				return nil, status.Error(codes.NotFound, "Record does not exist")
 			}
 
-			request := api.NewChallengeRequest(req)
-			bag := api.NewRequestBag(request)
-			requestedFields := api.RequestedFields(bag, s.fields.Challenge)
+			requestedFields := api.RequestedFields(req.GetFields(), s.fields.Challenge)
 			availableFields := s.fields.Challenge.Available
 
 			_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "200"))
@@ -139,10 +135,6 @@ func (s *Service) PostChallenge(ctx Context, req *PbPostChallengeRequest) (*PbPo
 
 			if req.GetGallery() != "" {
 				fields["gallery"] = req.GetGallery()
-			}
-
-			if len(fields) == 0 {
-				return nil, status.Error(codes.InvalidArgument, "No fields provided")
 			}
 
 			result := s.dbCtx.Model(&Challenge{}).Create(fields)

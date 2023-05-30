@@ -13,19 +13,19 @@ type FieldTypes struct {
 type Fields struct {
 	Challenge *FieldTypes
 	Category  *FieldTypes
+	Location  *FieldTypes
 }
 
 func NewFields() Fields {
 	return Fields{}
 }
 
-func RequestedFields[T Bag](req *RequestBag[T], fb *FieldTypes) []string {
-	if len(req.GetFields()) == 0 {
+func RequestedFields(fields string, fb *FieldTypes) []string {
+	if len(fields) == 0 {
 		return fb.Default
 	}
 
-	fieldsSlice := strings.Split(req.GetFields(), ",")
-	for _, f := range fieldsSlice {
+	for _, f := range strings.Split(fields, ",") {
 		for _, g := range fb.Guarded {
 			if f == g {
 				panic("field " + f + " not allowed")
@@ -33,8 +33,8 @@ func RequestedFields[T Bag](req *RequestBag[T], fb *FieldTypes) []string {
 		}
 	}
 
-	fields := fb.Default
-	fields = append(fields, strings.Split(req.GetFields(), ",")...)
+	f := fb.Default
+	f = append(f, strings.Split(fields, ",")...)
 
-	return fields
+	return f
 }

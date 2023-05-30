@@ -1,7 +1,6 @@
 package challenge
 
 import (
-	"fmt"
 	pb "github.com/ruifrodrigues/ecooda/stubs/go/ecooda/v1"
 	"sync"
 )
@@ -19,7 +18,6 @@ func challengeFields(records []*Challenge, fields []string, limit int32) []*PbCh
 
 		go func() {
 			for _, field := range fields {
-				fmt.Println(field)
 				if field == "uuid" {
 					item.Uuid = record.UUID.String()
 				}

@@ -21,33 +21,31 @@ func (s *Service) GetCategories(ctx Context, req *PbGetCategoriesRequest) (*PbGe
 		case <-ctx.Done():
 			return nil, status.Error(codes.DeadlineExceeded, "Connection Timeout")
 		default:
+			var maxLimit int32 = 25
 			var records []*Category
 
-			request := api.NewCategoriesRequest(req)
-			bag := api.NewRequestBag(request)
-			offset := api.Offset(bag)
-			limit := api.Limit(bag, 25)
-			order := api.Sort(bag, allowedSorts)
-
 			model := s.dbCtx.Model(&Category{})
-
-			cursor, err := api.NewCursor(model, bag)
+			cursor, err := api.NewCursor(model, req.GetPage(), req.GetPageSize(), maxLimit)
 			if err != nil {
 				return nil, err
 			}
+
+			offset := api.Offset(req.GetPage(), req.GetPageSize(), maxLimit)
+			limit := api.Limit(req.GetPageSize(), maxLimit)
+			order := api.Sort(req.GetSort(), allowedSorts)
 
 			s.dbCtx.Offset(offset).Limit(limit).Order(order).Find(&records)
 			if len(records) == 0 {
 				return nil, status.Error(codes.NotFound, "No records available")
 			}
 
-			requestedFields := api.RequestedFields(bag, s.fields.Category)
+			requestedFields := api.RequestedFields(req.GetFields(), s.fields.Challenge)
 			availableFields := s.fields.Category.Available
 
 			_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "200"))
 
 			return &PbGetCategoriesResponse{
-				Data: categoryFields(records, requestedFields, 25),
+				Data: categoryFields(records, requestedFields, maxLimit),
 				Meta: api.NewMeta().AddCursor(cursor).AddFields(availableFields).Meta,
 			}, nil
 		}
@@ -78,9 +76,7 @@ func (s *Service) GetCategory(ctx Context, req *PbGetCategoryRequest) (*PbGetCat
 				return nil, status.Error(codes.NotFound, "Record does not exist")
 			}
 
-			request := api.NewCategoryRequest(req)
-			bag := api.NewRequestBag(request)
-			requestedFields := api.RequestedFields(bag, s.fields.Category)
+			requestedFields := api.RequestedFields(req.GetFields(), s.fields.Challenge)
 			availableFields := s.fields.Category.Available
 
 			_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "200"))
@@ -110,10 +106,6 @@ func (s *Service) PostCategory(ctx Context, req *PbPostCategoryRequest) (*PbPost
 
 			fields["uuid"] = uuid.New()
 			fields["name"] = req.GetName()
-
-			if len(fields) == 0 {
-				return nil, status.Error(codes.InvalidArgument, "No fields provided")
-			}
 
 			result := s.dbCtx.Model(&Category{}).Create(fields)
 			if result.Error != nil {

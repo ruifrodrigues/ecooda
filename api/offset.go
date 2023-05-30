@@ -1,11 +1,11 @@
 package api
 
-func Offset[T Bag](req *RequestBag[T]) int {
-	currentPage := 0
+func Offset(page, pageSize, maxLimit int32) int {
+	size := size(pageSize, maxLimit)
 
-	if req.GetPage() > 1 {
-		currentPage = int(req.GetPage()) - 1
+	if page == 1 {
+		return 0
 	}
 
-	return currentPage * int(req.GetPageSize())
+	return int(page-1) * size
 }

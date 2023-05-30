@@ -7,9 +7,10 @@ CREATE TABLE category_challenges
     deleted_at   TIMESTAMP                           NULL,
 
     PRIMARY KEY (category_id, challenge_id),
-    CONSTRAINT category_challenges_ibfk_1 FOREIGN KEY (category_id) REFERENCES categories (id),
-    CONSTRAINT category_challenges_ibfk_2 FOREIGN KEY (challenge_id) REFERENCES challenges (id)
+    CONSTRAINT category_challenges_category_id_fk FOREIGN KEY (category_id) REFERENCES categories (id),
+    CONSTRAINT category_challenges_challenge_id_fk FOREIGN KEY (challenge_id) REFERENCES challenges (id)
 );
 
-CREATE INDEX challenge_id ON category_challenges (challenge_id);
+CREATE INDEX category_challenges_category_id_index ON category_challenges (category_id);
+CREATE INDEX category_challenges_challenge_id_index ON category_challenges (challenge_id);
 

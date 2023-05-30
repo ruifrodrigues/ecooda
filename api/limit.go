@@ -1,15 +1,16 @@
 package api
 
-func Limit[T Bag](req *RequestBag[T], maxLimit int) int {
-	pageSize := int(req.GetPageSize())
+func Limit(pageSize, maxLimit int32) int {
+	pSize := int(pageSize)
+	mLimit := int(maxLimit)
 
-	if pageSize > maxLimit {
-		return maxLimit
+	if pSize > mLimit {
+		return mLimit
 	}
 
-	if req.GetPageSize() == 0 {
-		return maxLimit
+	if pSize == 0 {
+		return mLimit
 	}
 
-	return pageSize
+	return pSize
 }

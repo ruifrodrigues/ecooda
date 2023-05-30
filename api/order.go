@@ -6,18 +6,18 @@ import (
 	"strings"
 )
 
-func Sort[T Bag](req *RequestBag[T], allowedSorts []string) string {
-	if req.GetSort() == "" {
+func Sort(sort string, allowedSorts []string) string {
+	if sort == "" {
 		return "id ASC"
 	}
 
-	field := strings.Replace(req.GetSort(), "-", "", 1)
+	field := strings.Replace(sort, "-", "", 1)
 
 	if !utils.InArray(field, allowedSorts) {
 		return "id ASC"
 	}
 
-	if strings.HasPrefix(req.GetSort(), "-") {
+	if strings.HasPrefix(sort, "-") {
 		return fmt.Sprintf("%s DESC", field)
 	}
 

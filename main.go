@@ -18,6 +18,7 @@ func main() {
 	}
 
 	//config.RunFactories(conf.Database, challenge.Seeders)
+	//config.RunFactories(conf.Database, location.Seeders)
 
 	go runGrpcServer(conf)
 	runHttpProxy(conf)
