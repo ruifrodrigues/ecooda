@@ -1,12 +1,11 @@
 package challenge
 
 import (
+	"encoding/json"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"gorm.io/datatypes"
 )
-
-type AggregateRoot struct {
-	challenge *Challenge
-}
 
 type Aggregate interface {
 	ChangeName(name string)
@@ -16,47 +15,76 @@ type Aggregate interface {
 	ChangeLatitude(latitude float32)
 	ChangeLongitude(longitude float32)
 	ChangeThumbnail(thumbnail string)
-	ChangeGallery(gallery datatypes.JSON)
+	ChangeGallery(gallery string) error
 	AddCategory(category *Category)
 	RemoveCategory(uuid string)
 }
 
-func NewAggregateRoot(challenge *Challenge) *AggregateRoot {
+type AggregateRoot struct {
+	challenge *Challenge
+}
+
+func NewAggregateRoot(challenge *Challenge) Aggregate {
 	return &AggregateRoot{
 		challenge: challenge,
 	}
 }
 
 func (a *AggregateRoot) ChangeName(name string) {
-	a.challenge.Name = name
+	if name != "" {
+		a.challenge.Name = name
+	}
 }
 
 func (a *AggregateRoot) ChangeDescription(description string) {
-	a.challenge.Description = description
+	if description != "" {
+		a.challenge.Description = description
+	}
 }
 
 func (a *AggregateRoot) ChangeStreet(street string) {
-	a.challenge.Street = street
+	if street != "" {
+		a.challenge.Street = street
+	}
 }
 
 func (a *AggregateRoot) ChangePostcode(postcode string) {
-	a.challenge.Postcode = postcode
+	if postcode != "" {
+		a.challenge.Postcode = postcode
+	}
 }
 
 func (a *AggregateRoot) ChangeLatitude(latitude float32) {
-	a.challenge.Latitude = latitude
+	if latitude != 0 {
+		a.challenge.Latitude = latitude
+	}
 }
 
 func (a *AggregateRoot) ChangeLongitude(longitude float32) {
-	a.challenge.Longitude = longitude
+	if longitude != 0 {
+		a.challenge.Longitude = longitude
+	}
 }
 
 func (a *AggregateRoot) ChangeThumbnail(thumbnail string) {
-	a.challenge.Thumbnail = thumbnail
+	if thumbnail != "" {
+		a.challenge.Thumbnail = thumbnail
+	}
 }
 
-func (a *AggregateRoot) ChangeGallery(gallery datatypes.JSON) {
-	a.challenge.Gallery = gallery
+func (a *AggregateRoot) ChangeGallery(gallery string) error {
+	if gallery != "" {
+		var galleryJSON datatypes.JSON
+
+		err := json.Unmarshal([]byte(gallery), &galleryJSON)
+		if err != nil {
+			return status.Error(codes.InvalidArgument, "Gallery field not a valid JSON >> "+err.Error())
+		}
+
+		a.challenge.Gallery = galleryJSON
+	}
+
+	return nil
 }
 
 func (a *AggregateRoot) AddCategory(category *Category) {

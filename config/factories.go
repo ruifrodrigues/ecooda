@@ -4,27 +4,25 @@ type (
 	Seeds map[interface{}]func(Database)
 )
 
-func RunFactories(db IDatabase, seeds Seeds) {
+func RunFactories(db DB, seeds Seeds) {
 	if db == nil {
 		panic("Database must be enabled in NewConfig")
 	}
 
-	sqlDB, err := db.OpenConnection()
-	if err != nil {
+	if err := db.OpenConnection(); err != nil {
 		panic("DB Connection failed")
 	}
 
 	for model, seed := range seeds {
 		var count int64
 
-		sqlDB.Model(model).Count(&count)
+		db.Ctx().Model(model).Count(&count)
 		if count == 0 {
-			seed(sqlDB)
+			seed(db.Ctx())
 		}
 	}
 
-	err = sqlDB.CloseConnection()
-	if err != nil {
+	if err := db.CloseConnection(); err != nil {
 		panic("DB connection not closed")
 	}
 }

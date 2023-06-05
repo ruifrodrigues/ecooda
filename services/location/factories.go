@@ -4,6 +4,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/ruifrodrigues/ecooda/config"
 	pb "github.com/ruifrodrigues/ecooda/stubs/go/ecooda/v1"
+	"github.com/ruifrodrigues/ecooda/utils"
 )
 
 var Seeders = config.Seeds{
@@ -50,63 +51,63 @@ func seedLocationTable(db config.Database) {
 		},
 		{
 			ID:       7,
-			ParentID: 3,
+			ParentID: utils.Pointer[uint](3),
 			UUID:     uuid.New(),
 			Type:     int32(pb.LocationType_LOCATION_TYPE_COUNTRY),
 			Name:     "Portugal",
 		},
 		{
 			ID:       8,
-			ParentID: 7,
+			ParentID: utils.Pointer[uint](7),
 			UUID:     uuid.New(),
 			Type:     int32(pb.LocationType_LOCATION_TYPE_REGION),
 			Name:     "Estremadura",
 		},
 		{
 			ID:       9,
-			ParentID: 8,
+			ParentID: utils.Pointer[uint](8),
 			UUID:     uuid.New(),
 			Type:     int32(pb.LocationType_LOCATION_TYPE_CITY),
 			Name:     "Lisbon",
 		},
 		{
 			ID:       10,
-			ParentID: 3,
+			ParentID: utils.Pointer[uint](3),
 			UUID:     uuid.New(),
 			Type:     int32(pb.LocationType_LOCATION_TYPE_COUNTRY),
 			Name:     "Netherlands",
 		},
 		{
 			ID:       11,
-			ParentID: 10,
+			ParentID: utils.Pointer[uint](10),
 			UUID:     uuid.New(),
 			Type:     int32(pb.LocationType_LOCATION_TYPE_REGION),
 			Name:     "South Holland",
 		},
 		{
 			ID:       12,
-			ParentID: 11,
+			ParentID: utils.Pointer[uint](11),
 			UUID:     uuid.New(),
 			Type:     int32(pb.LocationType_LOCATION_TYPE_CITY),
 			Name:     "Amsterdam",
 		},
 		{
 			ID:       13,
-			ParentID: 5,
+			ParentID: utils.Pointer[uint](5),
 			UUID:     uuid.New(),
 			Type:     int32(pb.LocationType_LOCATION_TYPE_COUNTRY),
 			Name:     "Brazil",
 		},
 		{
 			ID:       14,
-			ParentID: 13,
+			ParentID: utils.Pointer[uint](13),
 			UUID:     uuid.New(),
 			Type:     int32(pb.LocationType_LOCATION_TYPE_REGION),
 			Name:     "Southeast Region",
 		},
 		{
 			ID:       15,
-			ParentID: 14,
+			ParentID: utils.Pointer[uint](14),
 			UUID:     uuid.New(),
 			Type:     int32(pb.LocationType_LOCATION_TYPE_CITY),
 			Name:     "Rio de Janeiro",

@@ -26,7 +26,7 @@ func NewValues() (*Values, error) {
 		}
 	}
 
-	v := &Values{}
+	v := new(Values)
 
 	if err := viper.Unmarshal(v); err != nil {
 		return nil, err

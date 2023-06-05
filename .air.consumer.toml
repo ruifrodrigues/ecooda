@@ -6,7 +6,7 @@ root = "."
 tmp_dir = "tmp"
 
 [build]
-# Just plain old shell command. You could use `make` as well.
+# Just plain old shell commands. You could use `make` as well.
 cmd = "go build -o ./tmp/consumer ."
 # Binary file yields from `cmd`.
 bin = "tmp/consumer"

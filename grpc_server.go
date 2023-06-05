@@ -14,11 +14,11 @@ func runGrpcServer(conf config.Config) {
 	// create new gRPC server
 	server := grpc.NewServer()
 
-	// register the GreeterServerImpl on the gRPC server
+	// register services from gRPC server
 	ecoodav1.RegisterChallengeServiceServer(server, challenge.NewChallengeService(conf))
 	ecoodav1.RegisterLocationServiceServer(server, location.NewLocationService(conf))
 
-	// start listening on port :8080 for a tcp connection
+	// start listening for a tcp connection
 	if l, err := net.Listen("tcp", conf.Values.GrpcPort); err != nil {
 		log.Fatal("error in listening on port "+conf.Values.GrpcPort, err)
 	} else {

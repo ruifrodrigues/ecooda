@@ -19,18 +19,32 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	LocationService_GetLocations_FullMethodName = "/ecooda.v1.LocationService/GetLocations"
-	LocationService_GetLocation_FullMethodName  = "/ecooda.v1.LocationService/GetLocation"
-	LocationService_PostLocation_FullMethodName = "/ecooda.v1.LocationService/PostLocation"
+	LocationService_GetLocationCollection_FullMethodName     = "/ecooda.v1.LocationService/GetLocationCollection"
+	LocationService_GetLocationItem_FullMethodName           = "/ecooda.v1.LocationService/GetLocationItem"
+	LocationService_CreateLocation_FullMethodName            = "/ecooda.v1.LocationService/CreateLocation"
+	LocationService_UpdateLocation_FullMethodName            = "/ecooda.v1.LocationService/UpdateLocation"
+	LocationService_DeleteLocation_FullMethodName            = "/ecooda.v1.LocationService/DeleteLocation"
+	LocationService_AddCountryToLocation_FullMethodName      = "/ecooda.v1.LocationService/AddCountryToLocation"
+	LocationService_AddRegionToLocation_FullMethodName       = "/ecooda.v1.LocationService/AddRegionToLocation"
+	LocationService_RemoveCountryFromLocation_FullMethodName = "/ecooda.v1.LocationService/RemoveCountryFromLocation"
+	LocationService_RemoveRegionFromLocation_FullMethodName  = "/ecooda.v1.LocationService/RemoveRegionFromLocation"
+	LocationService_AddChallengeToLocation_FullMethodName    = "/ecooda.v1.LocationService/AddChallengeToLocation"
 )
 
 // LocationServiceClient is the client API for LocationService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type LocationServiceClient interface {
-	GetLocations(ctx context.Context, in *GetLocationsRequest, opts ...grpc.CallOption) (*GetLocationsResponse, error)
-	GetLocation(ctx context.Context, in *GetLocationRequest, opts ...grpc.CallOption) (*GetLocationResponse, error)
-	PostLocation(ctx context.Context, in *PostLocationRequest, opts ...grpc.CallOption) (*PostLocationResponse, error)
+	GetLocationCollection(ctx context.Context, in *GetLocationCollectionRequest, opts ...grpc.CallOption) (*GetLocationCollectionResponse, error)
+	GetLocationItem(ctx context.Context, in *GetLocationItemRequest, opts ...grpc.CallOption) (*GetLocationItemResponse, error)
+	CreateLocation(ctx context.Context, in *CreateLocationRequest, opts ...grpc.CallOption) (*CreateLocationResponse, error)
+	UpdateLocation(ctx context.Context, in *UpdateLocationRequest, opts ...grpc.CallOption) (*UpdateLocationResponse, error)
+	DeleteLocation(ctx context.Context, in *DeleteLocationRequest, opts ...grpc.CallOption) (*DeleteLocationResponse, error)
+	AddCountryToLocation(ctx context.Context, in *AddCountryToLocationRequest, opts ...grpc.CallOption) (*AddCountryToLocationResponse, error)
+	AddRegionToLocation(ctx context.Context, in *AddRegionToLocationRequest, opts ...grpc.CallOption) (*AddRegionToLocationResponse, error)
+	RemoveCountryFromLocation(ctx context.Context, in *RemoveCountryFromLocationRequest, opts ...grpc.CallOption) (*RemoveCountryFromLocationResponse, error)
+	RemoveRegionFromLocation(ctx context.Context, in *RemoveRegionFromLocationRequest, opts ...grpc.CallOption) (*RemoveRegionFromLocationResponse, error)
+	AddChallengeToLocation(ctx context.Context, in *AddChallengeToLocationRequest, opts ...grpc.CallOption) (*AddChallengeToLocationResponse, error)
 }
 
 type locationServiceClient struct {
@@ -41,27 +55,90 @@ func NewLocationServiceClient(cc grpc.ClientConnInterface) LocationServiceClient
 	return &locationServiceClient{cc}
 }
 
-func (c *locationServiceClient) GetLocations(ctx context.Context, in *GetLocationsRequest, opts ...grpc.CallOption) (*GetLocationsResponse, error) {
-	out := new(GetLocationsResponse)
-	err := c.cc.Invoke(ctx, LocationService_GetLocations_FullMethodName, in, out, opts...)
+func (c *locationServiceClient) GetLocationCollection(ctx context.Context, in *GetLocationCollectionRequest, opts ...grpc.CallOption) (*GetLocationCollectionResponse, error) {
+	out := new(GetLocationCollectionResponse)
+	err := c.cc.Invoke(ctx, LocationService_GetLocationCollection_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *locationServiceClient) GetLocation(ctx context.Context, in *GetLocationRequest, opts ...grpc.CallOption) (*GetLocationResponse, error) {
-	out := new(GetLocationResponse)
-	err := c.cc.Invoke(ctx, LocationService_GetLocation_FullMethodName, in, out, opts...)
+func (c *locationServiceClient) GetLocationItem(ctx context.Context, in *GetLocationItemRequest, opts ...grpc.CallOption) (*GetLocationItemResponse, error) {
+	out := new(GetLocationItemResponse)
+	err := c.cc.Invoke(ctx, LocationService_GetLocationItem_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *locationServiceClient) PostLocation(ctx context.Context, in *PostLocationRequest, opts ...grpc.CallOption) (*PostLocationResponse, error) {
-	out := new(PostLocationResponse)
-	err := c.cc.Invoke(ctx, LocationService_PostLocation_FullMethodName, in, out, opts...)
+func (c *locationServiceClient) CreateLocation(ctx context.Context, in *CreateLocationRequest, opts ...grpc.CallOption) (*CreateLocationResponse, error) {
+	out := new(CreateLocationResponse)
+	err := c.cc.Invoke(ctx, LocationService_CreateLocation_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *locationServiceClient) UpdateLocation(ctx context.Context, in *UpdateLocationRequest, opts ...grpc.CallOption) (*UpdateLocationResponse, error) {
+	out := new(UpdateLocationResponse)
+	err := c.cc.Invoke(ctx, LocationService_UpdateLocation_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *locationServiceClient) DeleteLocation(ctx context.Context, in *DeleteLocationRequest, opts ...grpc.CallOption) (*DeleteLocationResponse, error) {
+	out := new(DeleteLocationResponse)
+	err := c.cc.Invoke(ctx, LocationService_DeleteLocation_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *locationServiceClient) AddCountryToLocation(ctx context.Context, in *AddCountryToLocationRequest, opts ...grpc.CallOption) (*AddCountryToLocationResponse, error) {
+	out := new(AddCountryToLocationResponse)
+	err := c.cc.Invoke(ctx, LocationService_AddCountryToLocation_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *locationServiceClient) AddRegionToLocation(ctx context.Context, in *AddRegionToLocationRequest, opts ...grpc.CallOption) (*AddRegionToLocationResponse, error) {
+	out := new(AddRegionToLocationResponse)
+	err := c.cc.Invoke(ctx, LocationService_AddRegionToLocation_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *locationServiceClient) RemoveCountryFromLocation(ctx context.Context, in *RemoveCountryFromLocationRequest, opts ...grpc.CallOption) (*RemoveCountryFromLocationResponse, error) {
+	out := new(RemoveCountryFromLocationResponse)
+	err := c.cc.Invoke(ctx, LocationService_RemoveCountryFromLocation_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *locationServiceClient) RemoveRegionFromLocation(ctx context.Context, in *RemoveRegionFromLocationRequest, opts ...grpc.CallOption) (*RemoveRegionFromLocationResponse, error) {
+	out := new(RemoveRegionFromLocationResponse)
+	err := c.cc.Invoke(ctx, LocationService_RemoveRegionFromLocation_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *locationServiceClient) AddChallengeToLocation(ctx context.Context, in *AddChallengeToLocationRequest, opts ...grpc.CallOption) (*AddChallengeToLocationResponse, error) {
+	out := new(AddChallengeToLocationResponse)
+	err := c.cc.Invoke(ctx, LocationService_AddChallengeToLocation_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -72,9 +149,16 @@ func (c *locationServiceClient) PostLocation(ctx context.Context, in *PostLocati
 // All implementations must embed UnimplementedLocationServiceServer
 // for forward compatibility
 type LocationServiceServer interface {
-	GetLocations(context.Context, *GetLocationsRequest) (*GetLocationsResponse, error)
-	GetLocation(context.Context, *GetLocationRequest) (*GetLocationResponse, error)
-	PostLocation(context.Context, *PostLocationRequest) (*PostLocationResponse, error)
+	GetLocationCollection(context.Context, *GetLocationCollectionRequest) (*GetLocationCollectionResponse, error)
+	GetLocationItem(context.Context, *GetLocationItemRequest) (*GetLocationItemResponse, error)
+	CreateLocation(context.Context, *CreateLocationRequest) (*CreateLocationResponse, error)
+	UpdateLocation(context.Context, *UpdateLocationRequest) (*UpdateLocationResponse, error)
+	DeleteLocation(context.Context, *DeleteLocationRequest) (*DeleteLocationResponse, error)
+	AddCountryToLocation(context.Context, *AddCountryToLocationRequest) (*AddCountryToLocationResponse, error)
+	AddRegionToLocation(context.Context, *AddRegionToLocationRequest) (*AddRegionToLocationResponse, error)
+	RemoveCountryFromLocation(context.Context, *RemoveCountryFromLocationRequest) (*RemoveCountryFromLocationResponse, error)
+	RemoveRegionFromLocation(context.Context, *RemoveRegionFromLocationRequest) (*RemoveRegionFromLocationResponse, error)
+	AddChallengeToLocation(context.Context, *AddChallengeToLocationRequest) (*AddChallengeToLocationResponse, error)
 	mustEmbedUnimplementedLocationServiceServer()
 }
 
@@ -82,14 +166,35 @@ type LocationServiceServer interface {
 type UnimplementedLocationServiceServer struct {
 }
 
-func (UnimplementedLocationServiceServer) GetLocations(context.Context, *GetLocationsRequest) (*GetLocationsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetLocations not implemented")
+func (UnimplementedLocationServiceServer) GetLocationCollection(context.Context, *GetLocationCollectionRequest) (*GetLocationCollectionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetLocationCollection not implemented")
 }
-func (UnimplementedLocationServiceServer) GetLocation(context.Context, *GetLocationRequest) (*GetLocationResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetLocation not implemented")
+func (UnimplementedLocationServiceServer) GetLocationItem(context.Context, *GetLocationItemRequest) (*GetLocationItemResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetLocationItem not implemented")
 }
-func (UnimplementedLocationServiceServer) PostLocation(context.Context, *PostLocationRequest) (*PostLocationResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method PostLocation not implemented")
+func (UnimplementedLocationServiceServer) CreateLocation(context.Context, *CreateLocationRequest) (*CreateLocationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateLocation not implemented")
+}
+func (UnimplementedLocationServiceServer) UpdateLocation(context.Context, *UpdateLocationRequest) (*UpdateLocationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateLocation not implemented")
+}
+func (UnimplementedLocationServiceServer) DeleteLocation(context.Context, *DeleteLocationRequest) (*DeleteLocationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteLocation not implemented")
+}
+func (UnimplementedLocationServiceServer) AddCountryToLocation(context.Context, *AddCountryToLocationRequest) (*AddCountryToLocationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddCountryToLocation not implemented")
+}
+func (UnimplementedLocationServiceServer) AddRegionToLocation(context.Context, *AddRegionToLocationRequest) (*AddRegionToLocationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddRegionToLocation not implemented")
+}
+func (UnimplementedLocationServiceServer) RemoveCountryFromLocation(context.Context, *RemoveCountryFromLocationRequest) (*RemoveCountryFromLocationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveCountryFromLocation not implemented")
+}
+func (UnimplementedLocationServiceServer) RemoveRegionFromLocation(context.Context, *RemoveRegionFromLocationRequest) (*RemoveRegionFromLocationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveRegionFromLocation not implemented")
+}
+func (UnimplementedLocationServiceServer) AddChallengeToLocation(context.Context, *AddChallengeToLocationRequest) (*AddChallengeToLocationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddChallengeToLocation not implemented")
 }
 func (UnimplementedLocationServiceServer) mustEmbedUnimplementedLocationServiceServer() {}
 
@@ -104,56 +209,182 @@ func RegisterLocationServiceServer(s grpc.ServiceRegistrar, srv LocationServiceS
 	s.RegisterService(&LocationService_ServiceDesc, srv)
 }
 
-func _LocationService_GetLocations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetLocationsRequest)
+func _LocationService_GetLocationCollection_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetLocationCollectionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(LocationServiceServer).GetLocations(ctx, in)
+		return srv.(LocationServiceServer).GetLocationCollection(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: LocationService_GetLocations_FullMethodName,
+		FullMethod: LocationService_GetLocationCollection_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(LocationServiceServer).GetLocations(ctx, req.(*GetLocationsRequest))
+		return srv.(LocationServiceServer).GetLocationCollection(ctx, req.(*GetLocationCollectionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _LocationService_GetLocation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetLocationRequest)
+func _LocationService_GetLocationItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetLocationItemRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(LocationServiceServer).GetLocation(ctx, in)
+		return srv.(LocationServiceServer).GetLocationItem(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: LocationService_GetLocation_FullMethodName,
+		FullMethod: LocationService_GetLocationItem_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(LocationServiceServer).GetLocation(ctx, req.(*GetLocationRequest))
+		return srv.(LocationServiceServer).GetLocationItem(ctx, req.(*GetLocationItemRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _LocationService_PostLocation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PostLocationRequest)
+func _LocationService_CreateLocation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateLocationRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(LocationServiceServer).PostLocation(ctx, in)
+		return srv.(LocationServiceServer).CreateLocation(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: LocationService_PostLocation_FullMethodName,
+		FullMethod: LocationService_CreateLocation_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(LocationServiceServer).PostLocation(ctx, req.(*PostLocationRequest))
+		return srv.(LocationServiceServer).CreateLocation(ctx, req.(*CreateLocationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _LocationService_UpdateLocation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateLocationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LocationServiceServer).UpdateLocation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LocationService_UpdateLocation_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LocationServiceServer).UpdateLocation(ctx, req.(*UpdateLocationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _LocationService_DeleteLocation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteLocationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LocationServiceServer).DeleteLocation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LocationService_DeleteLocation_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LocationServiceServer).DeleteLocation(ctx, req.(*DeleteLocationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _LocationService_AddCountryToLocation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddCountryToLocationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LocationServiceServer).AddCountryToLocation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LocationService_AddCountryToLocation_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LocationServiceServer).AddCountryToLocation(ctx, req.(*AddCountryToLocationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _LocationService_AddRegionToLocation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddRegionToLocationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LocationServiceServer).AddRegionToLocation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LocationService_AddRegionToLocation_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LocationServiceServer).AddRegionToLocation(ctx, req.(*AddRegionToLocationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _LocationService_RemoveCountryFromLocation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveCountryFromLocationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LocationServiceServer).RemoveCountryFromLocation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LocationService_RemoveCountryFromLocation_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LocationServiceServer).RemoveCountryFromLocation(ctx, req.(*RemoveCountryFromLocationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _LocationService_RemoveRegionFromLocation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveRegionFromLocationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LocationServiceServer).RemoveRegionFromLocation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LocationService_RemoveRegionFromLocation_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LocationServiceServer).RemoveRegionFromLocation(ctx, req.(*RemoveRegionFromLocationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _LocationService_AddChallengeToLocation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddChallengeToLocationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LocationServiceServer).AddChallengeToLocation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LocationService_AddChallengeToLocation_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LocationServiceServer).AddChallengeToLocation(ctx, req.(*AddChallengeToLocationRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -166,16 +397,44 @@ var LocationService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*LocationServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetLocations",
-			Handler:    _LocationService_GetLocations_Handler,
+			MethodName: "GetLocationCollection",
+			Handler:    _LocationService_GetLocationCollection_Handler,
 		},
 		{
-			MethodName: "GetLocation",
-			Handler:    _LocationService_GetLocation_Handler,
+			MethodName: "GetLocationItem",
+			Handler:    _LocationService_GetLocationItem_Handler,
 		},
 		{
-			MethodName: "PostLocation",
-			Handler:    _LocationService_PostLocation_Handler,
+			MethodName: "CreateLocation",
+			Handler:    _LocationService_CreateLocation_Handler,
+		},
+		{
+			MethodName: "UpdateLocation",
+			Handler:    _LocationService_UpdateLocation_Handler,
+		},
+		{
+			MethodName: "DeleteLocation",
+			Handler:    _LocationService_DeleteLocation_Handler,
+		},
+		{
+			MethodName: "AddCountryToLocation",
+			Handler:    _LocationService_AddCountryToLocation_Handler,
+		},
+		{
+			MethodName: "AddRegionToLocation",
+			Handler:    _LocationService_AddRegionToLocation_Handler,
+		},
+		{
+			MethodName: "RemoveCountryFromLocation",
+			Handler:    _LocationService_RemoveCountryFromLocation_Handler,
+		},
+		{
+			MethodName: "RemoveRegionFromLocation",
+			Handler:    _LocationService_RemoveRegionFromLocation_Handler,
+		},
+		{
+			MethodName: "AddChallengeToLocation",
+			Handler:    _LocationService_AddChallengeToLocation_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -183,33 +442,35 @@ var LocationService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	ChallengeService_GetChallenges_FullMethodName    = "/ecooda.v1.ChallengeService/GetChallenges"
-	ChallengeService_GetChallenge_FullMethodName     = "/ecooda.v1.ChallengeService/GetChallenge"
-	ChallengeService_PostChallenge_FullMethodName    = "/ecooda.v1.ChallengeService/PostChallenge"
-	ChallengeService_PutChallenge_FullMethodName     = "/ecooda.v1.ChallengeService/PutChallenge"
-	ChallengeService_DeleteChallenge_FullMethodName  = "/ecooda.v1.ChallengeService/DeleteChallenge"
-	ChallengeService_CommandChallenge_FullMethodName = "/ecooda.v1.ChallengeService/CommandChallenge"
-	ChallengeService_GetCategories_FullMethodName    = "/ecooda.v1.ChallengeService/GetCategories"
-	ChallengeService_GetCategory_FullMethodName      = "/ecooda.v1.ChallengeService/GetCategory"
-	ChallengeService_PostCategory_FullMethodName     = "/ecooda.v1.ChallengeService/PostCategory"
-	ChallengeService_PutCategory_FullMethodName      = "/ecooda.v1.ChallengeService/PutCategory"
-	ChallengeService_DeleteCategory_FullMethodName   = "/ecooda.v1.ChallengeService/DeleteCategory"
+	ChallengeService_GetChallengeCollection_FullMethodName      = "/ecooda.v1.ChallengeService/GetChallengeCollection"
+	ChallengeService_GetChallengeItem_FullMethodName            = "/ecooda.v1.ChallengeService/GetChallengeItem"
+	ChallengeService_CreateChallenge_FullMethodName             = "/ecooda.v1.ChallengeService/CreateChallenge"
+	ChallengeService_UpdateChallenge_FullMethodName             = "/ecooda.v1.ChallengeService/UpdateChallenge"
+	ChallengeService_DeleteChallenge_FullMethodName             = "/ecooda.v1.ChallengeService/DeleteChallenge"
+	ChallengeService_AddCategoryToChallenge_FullMethodName      = "/ecooda.v1.ChallengeService/AddCategoryToChallenge"
+	ChallengeService_RemoveCategoryFromChallenge_FullMethodName = "/ecooda.v1.ChallengeService/RemoveCategoryFromChallenge"
+	ChallengeService_GetCategoryCollection_FullMethodName       = "/ecooda.v1.ChallengeService/GetCategoryCollection"
+	ChallengeService_GetCategoryItem_FullMethodName             = "/ecooda.v1.ChallengeService/GetCategoryItem"
+	ChallengeService_CreateCategory_FullMethodName              = "/ecooda.v1.ChallengeService/CreateCategory"
+	ChallengeService_UpdateCategory_FullMethodName              = "/ecooda.v1.ChallengeService/UpdateCategory"
+	ChallengeService_DeleteCategory_FullMethodName              = "/ecooda.v1.ChallengeService/DeleteCategory"
 )
 
 // ChallengeServiceClient is the client API for ChallengeService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ChallengeServiceClient interface {
-	GetChallenges(ctx context.Context, in *GetChallengesRequest, opts ...grpc.CallOption) (*GetChallengesResponse, error)
-	GetChallenge(ctx context.Context, in *GetChallengeRequest, opts ...grpc.CallOption) (*GetChallengeResponse, error)
-	PostChallenge(ctx context.Context, in *PostChallengeRequest, opts ...grpc.CallOption) (*PostChallengeResponse, error)
-	PutChallenge(ctx context.Context, in *PutChallengeRequest, opts ...grpc.CallOption) (*PutChallengeResponse, error)
+	GetChallengeCollection(ctx context.Context, in *GetChallengeCollectionRequest, opts ...grpc.CallOption) (*GetChallengeCollectionResponse, error)
+	GetChallengeItem(ctx context.Context, in *GetChallengeItemRequest, opts ...grpc.CallOption) (*GetChallengeItemResponse, error)
+	CreateChallenge(ctx context.Context, in *CreateChallengeRequest, opts ...grpc.CallOption) (*CreateChallengeResponse, error)
+	UpdateChallenge(ctx context.Context, in *UpdateChallengeRequest, opts ...grpc.CallOption) (*UpdateChallengeResponse, error)
 	DeleteChallenge(ctx context.Context, in *DeleteChallengeRequest, opts ...grpc.CallOption) (*DeleteChallengeResponse, error)
-	CommandChallenge(ctx context.Context, in *CommandChallengeRequest, opts ...grpc.CallOption) (*CommandChallengeResponse, error)
-	GetCategories(ctx context.Context, in *GetCategoriesRequest, opts ...grpc.CallOption) (*GetCategoriesResponse, error)
-	GetCategory(ctx context.Context, in *GetCategoryRequest, opts ...grpc.CallOption) (*GetCategoryResponse, error)
-	PostCategory(ctx context.Context, in *PostCategoryRequest, opts ...grpc.CallOption) (*PostCategoryResponse, error)
-	PutCategory(ctx context.Context, in *PutCategoryRequest, opts ...grpc.CallOption) (*PutCategoryResponse, error)
+	AddCategoryToChallenge(ctx context.Context, in *AddCategoryToChallengeRequest, opts ...grpc.CallOption) (*AddCategoryToChallengeResponse, error)
+	RemoveCategoryFromChallenge(ctx context.Context, in *RemoveCategoryFromChallengeRequest, opts ...grpc.CallOption) (*RemoveCategoryFromChallengeResponse, error)
+	GetCategoryCollection(ctx context.Context, in *GetCategoryCollectionRequest, opts ...grpc.CallOption) (*GetCategoryCollectionResponse, error)
+	GetCategoryItem(ctx context.Context, in *GetCategoryItemRequest, opts ...grpc.CallOption) (*GetCategoryItemResponse, error)
+	CreateCategory(ctx context.Context, in *CreateCategoryRequest, opts ...grpc.CallOption) (*CreateCategoryResponse, error)
+	UpdateCategory(ctx context.Context, in *UpdateCategoryRequest, opts ...grpc.CallOption) (*UpdateCategoryResponse, error)
 	DeleteCategory(ctx context.Context, in *DeleteCategoryRequest, opts ...grpc.CallOption) (*DeleteCategoryResponse, error)
 }
 
@@ -221,36 +482,36 @@ func NewChallengeServiceClient(cc grpc.ClientConnInterface) ChallengeServiceClie
 	return &challengeServiceClient{cc}
 }
 
-func (c *challengeServiceClient) GetChallenges(ctx context.Context, in *GetChallengesRequest, opts ...grpc.CallOption) (*GetChallengesResponse, error) {
-	out := new(GetChallengesResponse)
-	err := c.cc.Invoke(ctx, ChallengeService_GetChallenges_FullMethodName, in, out, opts...)
+func (c *challengeServiceClient) GetChallengeCollection(ctx context.Context, in *GetChallengeCollectionRequest, opts ...grpc.CallOption) (*GetChallengeCollectionResponse, error) {
+	out := new(GetChallengeCollectionResponse)
+	err := c.cc.Invoke(ctx, ChallengeService_GetChallengeCollection_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *challengeServiceClient) GetChallenge(ctx context.Context, in *GetChallengeRequest, opts ...grpc.CallOption) (*GetChallengeResponse, error) {
-	out := new(GetChallengeResponse)
-	err := c.cc.Invoke(ctx, ChallengeService_GetChallenge_FullMethodName, in, out, opts...)
+func (c *challengeServiceClient) GetChallengeItem(ctx context.Context, in *GetChallengeItemRequest, opts ...grpc.CallOption) (*GetChallengeItemResponse, error) {
+	out := new(GetChallengeItemResponse)
+	err := c.cc.Invoke(ctx, ChallengeService_GetChallengeItem_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *challengeServiceClient) PostChallenge(ctx context.Context, in *PostChallengeRequest, opts ...grpc.CallOption) (*PostChallengeResponse, error) {
-	out := new(PostChallengeResponse)
-	err := c.cc.Invoke(ctx, ChallengeService_PostChallenge_FullMethodName, in, out, opts...)
+func (c *challengeServiceClient) CreateChallenge(ctx context.Context, in *CreateChallengeRequest, opts ...grpc.CallOption) (*CreateChallengeResponse, error) {
+	out := new(CreateChallengeResponse)
+	err := c.cc.Invoke(ctx, ChallengeService_CreateChallenge_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *challengeServiceClient) PutChallenge(ctx context.Context, in *PutChallengeRequest, opts ...grpc.CallOption) (*PutChallengeResponse, error) {
-	out := new(PutChallengeResponse)
-	err := c.cc.Invoke(ctx, ChallengeService_PutChallenge_FullMethodName, in, out, opts...)
+func (c *challengeServiceClient) UpdateChallenge(ctx context.Context, in *UpdateChallengeRequest, opts ...grpc.CallOption) (*UpdateChallengeResponse, error) {
+	out := new(UpdateChallengeResponse)
+	err := c.cc.Invoke(ctx, ChallengeService_UpdateChallenge_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -266,45 +527,54 @@ func (c *challengeServiceClient) DeleteChallenge(ctx context.Context, in *Delete
 	return out, nil
 }
 
-func (c *challengeServiceClient) CommandChallenge(ctx context.Context, in *CommandChallengeRequest, opts ...grpc.CallOption) (*CommandChallengeResponse, error) {
-	out := new(CommandChallengeResponse)
-	err := c.cc.Invoke(ctx, ChallengeService_CommandChallenge_FullMethodName, in, out, opts...)
+func (c *challengeServiceClient) AddCategoryToChallenge(ctx context.Context, in *AddCategoryToChallengeRequest, opts ...grpc.CallOption) (*AddCategoryToChallengeResponse, error) {
+	out := new(AddCategoryToChallengeResponse)
+	err := c.cc.Invoke(ctx, ChallengeService_AddCategoryToChallenge_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *challengeServiceClient) GetCategories(ctx context.Context, in *GetCategoriesRequest, opts ...grpc.CallOption) (*GetCategoriesResponse, error) {
-	out := new(GetCategoriesResponse)
-	err := c.cc.Invoke(ctx, ChallengeService_GetCategories_FullMethodName, in, out, opts...)
+func (c *challengeServiceClient) RemoveCategoryFromChallenge(ctx context.Context, in *RemoveCategoryFromChallengeRequest, opts ...grpc.CallOption) (*RemoveCategoryFromChallengeResponse, error) {
+	out := new(RemoveCategoryFromChallengeResponse)
+	err := c.cc.Invoke(ctx, ChallengeService_RemoveCategoryFromChallenge_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *challengeServiceClient) GetCategory(ctx context.Context, in *GetCategoryRequest, opts ...grpc.CallOption) (*GetCategoryResponse, error) {
-	out := new(GetCategoryResponse)
-	err := c.cc.Invoke(ctx, ChallengeService_GetCategory_FullMethodName, in, out, opts...)
+func (c *challengeServiceClient) GetCategoryCollection(ctx context.Context, in *GetCategoryCollectionRequest, opts ...grpc.CallOption) (*GetCategoryCollectionResponse, error) {
+	out := new(GetCategoryCollectionResponse)
+	err := c.cc.Invoke(ctx, ChallengeService_GetCategoryCollection_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *challengeServiceClient) PostCategory(ctx context.Context, in *PostCategoryRequest, opts ...grpc.CallOption) (*PostCategoryResponse, error) {
-	out := new(PostCategoryResponse)
-	err := c.cc.Invoke(ctx, ChallengeService_PostCategory_FullMethodName, in, out, opts...)
+func (c *challengeServiceClient) GetCategoryItem(ctx context.Context, in *GetCategoryItemRequest, opts ...grpc.CallOption) (*GetCategoryItemResponse, error) {
+	out := new(GetCategoryItemResponse)
+	err := c.cc.Invoke(ctx, ChallengeService_GetCategoryItem_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *challengeServiceClient) PutCategory(ctx context.Context, in *PutCategoryRequest, opts ...grpc.CallOption) (*PutCategoryResponse, error) {
-	out := new(PutCategoryResponse)
-	err := c.cc.Invoke(ctx, ChallengeService_PutCategory_FullMethodName, in, out, opts...)
+func (c *challengeServiceClient) CreateCategory(ctx context.Context, in *CreateCategoryRequest, opts ...grpc.CallOption) (*CreateCategoryResponse, error) {
+	out := new(CreateCategoryResponse)
+	err := c.cc.Invoke(ctx, ChallengeService_CreateCategory_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *challengeServiceClient) UpdateCategory(ctx context.Context, in *UpdateCategoryRequest, opts ...grpc.CallOption) (*UpdateCategoryResponse, error) {
+	out := new(UpdateCategoryResponse)
+	err := c.cc.Invoke(ctx, ChallengeService_UpdateCategory_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -324,16 +594,17 @@ func (c *challengeServiceClient) DeleteCategory(ctx context.Context, in *DeleteC
 // All implementations must embed UnimplementedChallengeServiceServer
 // for forward compatibility
 type ChallengeServiceServer interface {
-	GetChallenges(context.Context, *GetChallengesRequest) (*GetChallengesResponse, error)
-	GetChallenge(context.Context, *GetChallengeRequest) (*GetChallengeResponse, error)
-	PostChallenge(context.Context, *PostChallengeRequest) (*PostChallengeResponse, error)
-	PutChallenge(context.Context, *PutChallengeRequest) (*PutChallengeResponse, error)
+	GetChallengeCollection(context.Context, *GetChallengeCollectionRequest) (*GetChallengeCollectionResponse, error)
+	GetChallengeItem(context.Context, *GetChallengeItemRequest) (*GetChallengeItemResponse, error)
+	CreateChallenge(context.Context, *CreateChallengeRequest) (*CreateChallengeResponse, error)
+	UpdateChallenge(context.Context, *UpdateChallengeRequest) (*UpdateChallengeResponse, error)
 	DeleteChallenge(context.Context, *DeleteChallengeRequest) (*DeleteChallengeResponse, error)
-	CommandChallenge(context.Context, *CommandChallengeRequest) (*CommandChallengeResponse, error)
-	GetCategories(context.Context, *GetCategoriesRequest) (*GetCategoriesResponse, error)
-	GetCategory(context.Context, *GetCategoryRequest) (*GetCategoryResponse, error)
-	PostCategory(context.Context, *PostCategoryRequest) (*PostCategoryResponse, error)
-	PutCategory(context.Context, *PutCategoryRequest) (*PutCategoryResponse, error)
+	AddCategoryToChallenge(context.Context, *AddCategoryToChallengeRequest) (*AddCategoryToChallengeResponse, error)
+	RemoveCategoryFromChallenge(context.Context, *RemoveCategoryFromChallengeRequest) (*RemoveCategoryFromChallengeResponse, error)
+	GetCategoryCollection(context.Context, *GetCategoryCollectionRequest) (*GetCategoryCollectionResponse, error)
+	GetCategoryItem(context.Context, *GetCategoryItemRequest) (*GetCategoryItemResponse, error)
+	CreateCategory(context.Context, *CreateCategoryRequest) (*CreateCategoryResponse, error)
+	UpdateCategory(context.Context, *UpdateCategoryRequest) (*UpdateCategoryResponse, error)
 	DeleteCategory(context.Context, *DeleteCategoryRequest) (*DeleteCategoryResponse, error)
 	mustEmbedUnimplementedChallengeServiceServer()
 }
@@ -342,35 +613,38 @@ type ChallengeServiceServer interface {
 type UnimplementedChallengeServiceServer struct {
 }
 
-func (UnimplementedChallengeServiceServer) GetChallenges(context.Context, *GetChallengesRequest) (*GetChallengesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetChallenges not implemented")
+func (UnimplementedChallengeServiceServer) GetChallengeCollection(context.Context, *GetChallengeCollectionRequest) (*GetChallengeCollectionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetChallengeCollection not implemented")
 }
-func (UnimplementedChallengeServiceServer) GetChallenge(context.Context, *GetChallengeRequest) (*GetChallengeResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetChallenge not implemented")
+func (UnimplementedChallengeServiceServer) GetChallengeItem(context.Context, *GetChallengeItemRequest) (*GetChallengeItemResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetChallengeItem not implemented")
 }
-func (UnimplementedChallengeServiceServer) PostChallenge(context.Context, *PostChallengeRequest) (*PostChallengeResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method PostChallenge not implemented")
+func (UnimplementedChallengeServiceServer) CreateChallenge(context.Context, *CreateChallengeRequest) (*CreateChallengeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateChallenge not implemented")
 }
-func (UnimplementedChallengeServiceServer) PutChallenge(context.Context, *PutChallengeRequest) (*PutChallengeResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method PutChallenge not implemented")
+func (UnimplementedChallengeServiceServer) UpdateChallenge(context.Context, *UpdateChallengeRequest) (*UpdateChallengeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateChallenge not implemented")
 }
 func (UnimplementedChallengeServiceServer) DeleteChallenge(context.Context, *DeleteChallengeRequest) (*DeleteChallengeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteChallenge not implemented")
 }
-func (UnimplementedChallengeServiceServer) CommandChallenge(context.Context, *CommandChallengeRequest) (*CommandChallengeResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CommandChallenge not implemented")
+func (UnimplementedChallengeServiceServer) AddCategoryToChallenge(context.Context, *AddCategoryToChallengeRequest) (*AddCategoryToChallengeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddCategoryToChallenge not implemented")
 }
-func (UnimplementedChallengeServiceServer) GetCategories(context.Context, *GetCategoriesRequest) (*GetCategoriesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetCategories not implemented")
+func (UnimplementedChallengeServiceServer) RemoveCategoryFromChallenge(context.Context, *RemoveCategoryFromChallengeRequest) (*RemoveCategoryFromChallengeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveCategoryFromChallenge not implemented")
 }
-func (UnimplementedChallengeServiceServer) GetCategory(context.Context, *GetCategoryRequest) (*GetCategoryResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetCategory not implemented")
+func (UnimplementedChallengeServiceServer) GetCategoryCollection(context.Context, *GetCategoryCollectionRequest) (*GetCategoryCollectionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCategoryCollection not implemented")
 }
-func (UnimplementedChallengeServiceServer) PostCategory(context.Context, *PostCategoryRequest) (*PostCategoryResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method PostCategory not implemented")
+func (UnimplementedChallengeServiceServer) GetCategoryItem(context.Context, *GetCategoryItemRequest) (*GetCategoryItemResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCategoryItem not implemented")
 }
-func (UnimplementedChallengeServiceServer) PutCategory(context.Context, *PutCategoryRequest) (*PutCategoryResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method PutCategory not implemented")
+func (UnimplementedChallengeServiceServer) CreateCategory(context.Context, *CreateCategoryRequest) (*CreateCategoryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateCategory not implemented")
+}
+func (UnimplementedChallengeServiceServer) UpdateCategory(context.Context, *UpdateCategoryRequest) (*UpdateCategoryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateCategory not implemented")
 }
 func (UnimplementedChallengeServiceServer) DeleteCategory(context.Context, *DeleteCategoryRequest) (*DeleteCategoryResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteCategory not implemented")
@@ -388,74 +662,74 @@ func RegisterChallengeServiceServer(s grpc.ServiceRegistrar, srv ChallengeServic
 	s.RegisterService(&ChallengeService_ServiceDesc, srv)
 }
 
-func _ChallengeService_GetChallenges_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetChallengesRequest)
+func _ChallengeService_GetChallengeCollection_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetChallengeCollectionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ChallengeServiceServer).GetChallenges(ctx, in)
+		return srv.(ChallengeServiceServer).GetChallengeCollection(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ChallengeService_GetChallenges_FullMethodName,
+		FullMethod: ChallengeService_GetChallengeCollection_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChallengeServiceServer).GetChallenges(ctx, req.(*GetChallengesRequest))
+		return srv.(ChallengeServiceServer).GetChallengeCollection(ctx, req.(*GetChallengeCollectionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ChallengeService_GetChallenge_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetChallengeRequest)
+func _ChallengeService_GetChallengeItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetChallengeItemRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ChallengeServiceServer).GetChallenge(ctx, in)
+		return srv.(ChallengeServiceServer).GetChallengeItem(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ChallengeService_GetChallenge_FullMethodName,
+		FullMethod: ChallengeService_GetChallengeItem_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChallengeServiceServer).GetChallenge(ctx, req.(*GetChallengeRequest))
+		return srv.(ChallengeServiceServer).GetChallengeItem(ctx, req.(*GetChallengeItemRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ChallengeService_PostChallenge_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PostChallengeRequest)
+func _ChallengeService_CreateChallenge_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateChallengeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ChallengeServiceServer).PostChallenge(ctx, in)
+		return srv.(ChallengeServiceServer).CreateChallenge(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ChallengeService_PostChallenge_FullMethodName,
+		FullMethod: ChallengeService_CreateChallenge_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChallengeServiceServer).PostChallenge(ctx, req.(*PostChallengeRequest))
+		return srv.(ChallengeServiceServer).CreateChallenge(ctx, req.(*CreateChallengeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ChallengeService_PutChallenge_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PutChallengeRequest)
+func _ChallengeService_UpdateChallenge_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateChallengeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ChallengeServiceServer).PutChallenge(ctx, in)
+		return srv.(ChallengeServiceServer).UpdateChallenge(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ChallengeService_PutChallenge_FullMethodName,
+		FullMethod: ChallengeService_UpdateChallenge_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChallengeServiceServer).PutChallenge(ctx, req.(*PutChallengeRequest))
+		return srv.(ChallengeServiceServer).UpdateChallenge(ctx, req.(*UpdateChallengeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -478,92 +752,110 @@ func _ChallengeService_DeleteChallenge_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ChallengeService_CommandChallenge_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CommandChallengeRequest)
+func _ChallengeService_AddCategoryToChallenge_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddCategoryToChallengeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ChallengeServiceServer).CommandChallenge(ctx, in)
+		return srv.(ChallengeServiceServer).AddCategoryToChallenge(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ChallengeService_CommandChallenge_FullMethodName,
+		FullMethod: ChallengeService_AddCategoryToChallenge_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChallengeServiceServer).CommandChallenge(ctx, req.(*CommandChallengeRequest))
+		return srv.(ChallengeServiceServer).AddCategoryToChallenge(ctx, req.(*AddCategoryToChallengeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ChallengeService_GetCategories_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetCategoriesRequest)
+func _ChallengeService_RemoveCategoryFromChallenge_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveCategoryFromChallengeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ChallengeServiceServer).GetCategories(ctx, in)
+		return srv.(ChallengeServiceServer).RemoveCategoryFromChallenge(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ChallengeService_GetCategories_FullMethodName,
+		FullMethod: ChallengeService_RemoveCategoryFromChallenge_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChallengeServiceServer).GetCategories(ctx, req.(*GetCategoriesRequest))
+		return srv.(ChallengeServiceServer).RemoveCategoryFromChallenge(ctx, req.(*RemoveCategoryFromChallengeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ChallengeService_GetCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetCategoryRequest)
+func _ChallengeService_GetCategoryCollection_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCategoryCollectionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ChallengeServiceServer).GetCategory(ctx, in)
+		return srv.(ChallengeServiceServer).GetCategoryCollection(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ChallengeService_GetCategory_FullMethodName,
+		FullMethod: ChallengeService_GetCategoryCollection_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChallengeServiceServer).GetCategory(ctx, req.(*GetCategoryRequest))
+		return srv.(ChallengeServiceServer).GetCategoryCollection(ctx, req.(*GetCategoryCollectionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ChallengeService_PostCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PostCategoryRequest)
+func _ChallengeService_GetCategoryItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCategoryItemRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ChallengeServiceServer).PostCategory(ctx, in)
+		return srv.(ChallengeServiceServer).GetCategoryItem(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ChallengeService_PostCategory_FullMethodName,
+		FullMethod: ChallengeService_GetCategoryItem_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChallengeServiceServer).PostCategory(ctx, req.(*PostCategoryRequest))
+		return srv.(ChallengeServiceServer).GetCategoryItem(ctx, req.(*GetCategoryItemRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ChallengeService_PutCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PutCategoryRequest)
+func _ChallengeService_CreateCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateCategoryRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ChallengeServiceServer).PutCategory(ctx, in)
+		return srv.(ChallengeServiceServer).CreateCategory(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ChallengeService_PutCategory_FullMethodName,
+		FullMethod: ChallengeService_CreateCategory_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChallengeServiceServer).PutCategory(ctx, req.(*PutCategoryRequest))
+		return srv.(ChallengeServiceServer).CreateCategory(ctx, req.(*CreateCategoryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ChallengeService_UpdateCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateCategoryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ChallengeServiceServer).UpdateCategory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ChallengeService_UpdateCategory_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ChallengeServiceServer).UpdateCategory(ctx, req.(*UpdateCategoryRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -594,44 +886,48 @@ var ChallengeService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ChallengeServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetChallenges",
-			Handler:    _ChallengeService_GetChallenges_Handler,
+			MethodName: "GetChallengeCollection",
+			Handler:    _ChallengeService_GetChallengeCollection_Handler,
 		},
 		{
-			MethodName: "GetChallenge",
-			Handler:    _ChallengeService_GetChallenge_Handler,
+			MethodName: "GetChallengeItem",
+			Handler:    _ChallengeService_GetChallengeItem_Handler,
 		},
 		{
-			MethodName: "PostChallenge",
-			Handler:    _ChallengeService_PostChallenge_Handler,
+			MethodName: "CreateChallenge",
+			Handler:    _ChallengeService_CreateChallenge_Handler,
 		},
 		{
-			MethodName: "PutChallenge",
-			Handler:    _ChallengeService_PutChallenge_Handler,
+			MethodName: "UpdateChallenge",
+			Handler:    _ChallengeService_UpdateChallenge_Handler,
 		},
 		{
 			MethodName: "DeleteChallenge",
 			Handler:    _ChallengeService_DeleteChallenge_Handler,
 		},
 		{
-			MethodName: "CommandChallenge",
-			Handler:    _ChallengeService_CommandChallenge_Handler,
+			MethodName: "AddCategoryToChallenge",
+			Handler:    _ChallengeService_AddCategoryToChallenge_Handler,
 		},
 		{
-			MethodName: "GetCategories",
-			Handler:    _ChallengeService_GetCategories_Handler,
+			MethodName: "RemoveCategoryFromChallenge",
+			Handler:    _ChallengeService_RemoveCategoryFromChallenge_Handler,
 		},
 		{
-			MethodName: "GetCategory",
-			Handler:    _ChallengeService_GetCategory_Handler,
+			MethodName: "GetCategoryCollection",
+			Handler:    _ChallengeService_GetCategoryCollection_Handler,
 		},
 		{
-			MethodName: "PostCategory",
-			Handler:    _ChallengeService_PostCategory_Handler,
+			MethodName: "GetCategoryItem",
+			Handler:    _ChallengeService_GetCategoryItem_Handler,
 		},
 		{
-			MethodName: "PutCategory",
-			Handler:    _ChallengeService_PutCategory_Handler,
+			MethodName: "CreateCategory",
+			Handler:    _ChallengeService_CreateCategory_Handler,
+		},
+		{
+			MethodName: "UpdateCategory",
+			Handler:    _ChallengeService_UpdateCategory_Handler,
 		},
 		{
 			MethodName: "DeleteCategory",

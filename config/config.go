@@ -8,8 +8,8 @@ import (
 type OptionsFunc func(conf *Config)
 
 type Config struct {
-	Values   *Values
-	Database IDatabase
+	Values   Values
+	Database DB
 	Cache    string
 	Queue    string
 	Logger   string
@@ -54,12 +54,12 @@ func configureViper() error {
 }
 
 func (c *Config) loadValues() {
-	v, err := NewValues()
+	values, err := NewValues()
 	if err != nil {
 		panic(err)
 	}
 
-	c.Values = v
+	c.Values = *values
 }
 
 func (c *Config) loadOptions(opts ...OptionsFunc) {

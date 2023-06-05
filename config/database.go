@@ -6,36 +6,37 @@ import (
 	"gorm.io/gorm"
 )
 
+type DB interface {
+	OpenConnection() error
+	CloseConnection() error
+	Ctx() Database
+}
+
 type Database struct {
 	gorm.Dialector
 	*gorm.DB
 }
 
-type IDatabase interface {
-	OpenConnection() (Database, error)
-	CloseConnection() error
-}
-
-func NewDatabase(dialer IDialer) Database {
-	return Database{
+func NewDatabase(dialer Dialector) DB {
+	return &Database{
 		Dialector: dialer.Dial(),
 	}
 }
 
-func (db Database) OpenConnection() (Database, error) {
-	database := Database{}
+func (db *Database) OpenConnection() error {
+	config := new(gorm.Config)
+	//config.Logger = logger.Default.LogMode(logger.Info)
 
-	sqlDB, err := gorm.Open(db.Dialector, &gorm.Config{})
-	if err != nil {
-		return database, err
+	var err error
+
+	if db.DB, err = gorm.Open(db.Dialector, config); err != nil {
+		return err
 	}
 
-	database.DB = sqlDB
-
-	return database, nil
+	return nil
 }
 
-func (db Database) CloseConnection() error {
+func (db *Database) CloseConnection() error {
 	sqlDB, err := db.DB.DB()
 	if err != nil {
 		return err
@@ -49,20 +50,24 @@ func (db Database) CloseConnection() error {
 	return nil
 }
 
+func (db *Database) Ctx() Database {
+	if db.DB == nil {
+		panic("Database Connection not open!")
+	}
+
+	return *db
+}
+
+type Dialector interface {
+	Dial() gorm.Dialector
+}
+
 type Dialer struct {
 	DSN string
 }
 
-type IDialer interface {
-	Dial() gorm.Dialector
-}
-
-func (d Dialer) Dial() gorm.Dialector {
-	return mysql.Open(d.DSN)
-}
-
-func NewMySQLDialer(conf Config) IDialer {
-	return Dialer{
+func NewMySQLDialer(conf Config) Dialector {
+	return &Dialer{
 		DSN: fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 			conf.Values.DBUsername,
 			conf.Values.DBPassword,
@@ -73,8 +78,12 @@ func NewMySQLDialer(conf Config) IDialer {
 	}
 }
 
-func NewSQLiteDialer(conf Config) IDialer {
-	return Dialer{
+func (d *Dialer) Dial() gorm.Dialector {
+	return mysql.Open(d.DSN)
+}
+
+func NewSQLiteDialer(conf Config) Dialector {
+	return &Dialer{
 		DSN: conf.Values.DBTest + ".db",
 	}
 }

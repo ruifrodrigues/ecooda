@@ -38,8 +38,8 @@ type Challenge struct {
 
 type CategoryChallenges struct {
 	gorm.Model
-	CategoryID  uint      `json:"category_id" gorm:"primaryKey"`
-	ChallengeID uint      `json:"challenge_id" gorm:"primaryKey"`
+	CategoryID  *uint     `json:"category_id" gorm:"primaryKey"`
+	ChallengeID *uint     `json:"challenge_id" gorm:"primaryKey"`
 	CreatedAt   time.Time `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt   time.Time `json:"updated_at" gorm:"autoCreateTime"`
 	DeletedAt   time.Time `json:"deleted_at" gorm:"default:null"`

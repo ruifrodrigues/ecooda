@@ -3,6 +3,7 @@ package challenge
 import (
 	"github.com/google/uuid"
 	"github.com/ruifrodrigues/ecooda/config"
+	"github.com/ruifrodrigues/ecooda/utils"
 	"gorm.io/datatypes"
 )
 
@@ -642,172 +643,172 @@ func seedChallengeTable(db config.Database) {
 func seedCategoryChallengesTable(db config.Database) {
 	var cc = []CategoryChallenges{
 		{
-			CategoryID:  1,
-			ChallengeID: 1,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](1),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 2,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](2),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 3,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](3),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 4,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](4),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 5,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](5),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 6,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](6),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 7,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](7),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 8,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](8),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 9,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](9),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 10,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](10),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 11,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](11),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 12,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](12),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 13,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](13),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 14,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](14),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 15,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](15),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 16,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](16),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 17,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](17),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 18,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](18),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 19,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](19),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 20,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](20),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 21,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](21),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 22,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](22),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 23,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](23),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 24,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](24),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 25,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](25),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 26,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](26),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 27,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](27),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 28,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](28),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 29,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](29),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 30,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](30),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 31,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](31),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 32,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](32),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 33,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](33),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 34,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](34),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 35,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](35),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 36,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](36),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 37,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](37),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 38,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](38),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 39,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](39),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 40,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](40),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 41,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](41),
 		},
 		{
-			CategoryID:  1,
-			ChallengeID: 42,
+			CategoryID:  utils.Pointer[uint](1),
+			ChallengeID: utils.Pointer[uint](42),
 		},
 	}
 

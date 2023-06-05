@@ -2,7 +2,6 @@ package api
 
 import (
 	pb "github.com/ruifrodrigues/ecooda/stubs/go/ecooda/v1"
-	"gorm.io/gorm"
 	"math"
 )
 
@@ -10,24 +9,17 @@ type Cursor struct {
 	*pb.Cursor
 }
 
-func NewCursor(model *gorm.DB, page, pageSize, maxLimit int32) (*Cursor, error) {
+func NewCursor(count, page, pageSize, maxLimit int32) (*Cursor, error) {
 	cursor := &Cursor{
 		&pb.Cursor{},
 	}
 
-	cursor.Count = generateCount(model)
+	cursor.Count = count
 	cursor.Previous = generatePrevious(page)
 	cursor.Current = generateCurrent(page)
 	cursor.Next = generateNext(cursor.Count, cursor.Current, pageSize, maxLimit)
 
 	return cursor, nil
-}
-
-func generateCount(model *gorm.DB) int32 {
-	var count int64 = 0
-	model.Count(&count)
-
-	return int32(count)
 }
 
 func generatePrevious(page int32) int32 {

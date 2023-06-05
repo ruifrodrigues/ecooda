@@ -6,7 +6,7 @@ root = "."
 tmp_dir = "tmp"
 
 [build]
-# Just plain old shell command. You could use `make` as well.
+# Just plain old shell commands. You could use `make` as well.
 cmd = "go build -buildvcs=false -o ./tmp/server ."
 # Binary file yields from `cmd`.
 bin = "tmp/server"

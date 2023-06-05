@@ -2,6 +2,7 @@ package challenge
 
 import (
 	"github.com/ruifrodrigues/ecooda/api"
+	"github.com/ruifrodrigues/ecooda/config"
 	pb "github.com/ruifrodrigues/ecooda/stubs/go/ecooda/v1"
 )
 
@@ -9,62 +10,60 @@ var allowedSorts = []string{"id", "uuid"}
 
 type Service struct {
 	pb.UnimplementedChallengeServiceServer
-	dbCtx  Database
-	fields Fields
+	conf   config.Config
+	fields api.Fields
 }
 
-func NewChallengeService(conf Config) *Service {
-	conn, err := conf.Database.OpenConnection()
-	if err != nil {
+func NewChallengeService(conf config.Config) *Service {
+	if err := conf.Database.OpenConnection(); err != nil {
 		panic("Database Connection is not open!")
 	}
 
 	fields := api.NewFields()
-
-	fields.Challenge = &api.FieldTypes{
-		Guarded: []string{
-			"id",
-		},
-		Default: []string{
-			"uuid",
-			"created_at",
-			"updated_at",
-		},
-		Available: []string{
-			"uuid",
-			"name",
-			"description",
-			"street",
-			"postcode",
-			"latitude",
-			"longitude",
-			"thumbnail",
-			"gallery",
-			"categories",
-			"created_at",
-			"updated_at",
-		},
+	fields.Challenge = new(api.FieldTypes)
+	fields.Challenge.Guarded = []string{
+		"id",
 	}
 
-	fields.Category = &api.FieldTypes{
-		Guarded: []string{
-			"id",
-		},
-		Default: []string{
-			"uuid",
-			"created_at",
-			"updated_at",
-		},
-		Available: []string{
-			"uuid",
-			"name",
-			"created_at",
-			"updated_at",
-		},
+	fields.Challenge.Default = []string{
+		"uuid",
+		"created_at",
+		"updated_at",
+	}
+
+	fields.Challenge.Available = []string{
+		"uuid",
+		"name",
+		"description",
+		"street",
+		"postcode",
+		"latitude",
+		"longitude",
+		"thumbnail",
+		"gallery",
+		"categories",
+		"created_at",
+		"updated_at",
+	}
+
+	fields.Category = new(api.FieldTypes)
+	fields.Category.Guarded = []string{
+		"id",
+	}
+	fields.Category.Default = []string{
+		"uuid",
+		"created_at",
+		"updated_at",
+	}
+	fields.Category.Available = []string{
+		"uuid",
+		"name",
+		"created_at",
+		"updated_at",
 	}
 
 	return &Service{
-		dbCtx:  conn,
+		conf:   conf,
 		fields: fields,
 	}
 }

@@ -57,7 +57,7 @@ message Location {
   }
 }
 
-message GetLocationsRequest {
+message GetLocationCollectionRequest {
   oneof optional_fields {
     string fields = 1;
   }
@@ -75,12 +75,12 @@ message GetLocationsRequest {
   }
 }
 
-message GetLocationsResponse {
+message GetLocationCollectionResponse {
   repeated Location data = 1;
   Meta meta = 2;
 }
 
-message GetLocationRequest {
+message GetLocationItemRequest {
   string uuid = 1;
 
   oneof optional_fields {
@@ -88,12 +88,12 @@ message GetLocationRequest {
   }
 }
 
-message GetLocationResponse {
+message GetLocationItemResponse {
   Location data = 1;
   Meta meta = 2;
 }
 
-message PostLocationRequest {
+message CreateLocationRequest {
   string name = 1;
 
   string parent_uuid = 2;
@@ -101,22 +101,119 @@ message PostLocationRequest {
   LocationType type = 3;
 }
 
-message PostLocationResponse {}
+message CreateLocationResponse {}
+
+message UpdateLocationRequest {
+  string uuid = 1;
+
+  string name = 2;
+
+  LocationType type = 3;
+}
+
+message UpdateLocationResponse {}
+
+message DeleteLocationRequest {
+  string uuid = 1;
+}
+
+message DeleteLocationResponse {}
+
+message AddCountryToLocationRequest {
+  string uuid = 1;
+
+  string location_uuid = 2;
+}
+
+message AddCountryToLocationResponse {}
+
+message AddRegionToLocationRequest {
+  string uuid = 1;
+
+  string location_uuid = 2;
+}
+
+message AddRegionToLocationResponse {}
+
+message RemoveCountryFromLocationRequest {
+  string uuid = 1;
+
+  string location_uuid = 2;
+}
+
+message RemoveCountryFromLocationResponse {}
+
+message RemoveRegionFromLocationRequest {
+  string uuid = 1;
+
+  string location_uuid = 2;
+}
+
+message RemoveRegionFromLocationResponse {}
+
+message AddChallengeToLocationRequest {
+  string uuid = 1;
+
+  string challenge_uuid = 2;
+}
+
+message AddChallengeToLocationResponse {}
 
 service LocationService {
-  rpc GetLocations(GetLocationsRequest) returns (GetLocationsResponse) {
+  rpc GetLocationCollection(GetLocationCollectionRequest) returns (GetLocationCollectionResponse) {
     option (google.api.http) = {
       get: "/locations"
     };
   }
-  rpc GetLocation(GetLocationRequest) returns (GetLocationResponse) {
+  rpc GetLocationItem(GetLocationItemRequest) returns (GetLocationItemResponse) {
     option (google.api.http) = {
       get: "/locations/{uuid}"
     };
   }
-  rpc PostLocation(PostLocationRequest) returns (PostLocationResponse) {
+  rpc CreateLocation(CreateLocationRequest) returns (CreateLocationResponse) {
     option (google.api.http) = {
       post: "/locations"
+      body: "*"
+    };
+  }
+  rpc UpdateLocation(UpdateLocationRequest) returns (UpdateLocationResponse) {
+    option (google.api.http) = {
+      put: "/locations/{uuid}"
+      body: "*"
+    };
+  }
+  rpc DeleteLocation(DeleteLocationRequest) returns (DeleteLocationResponse) {
+    option (google.api.http) = {
+      delete: "/locations/{uuid}"
+    };
+  }
+  rpc AddCountryToLocation(AddCountryToLocationRequest) returns (AddCountryToLocationResponse) {
+    option (google.api.http) = {
+      post: "/locations/{uuid}/add-country"
+      body: "*"
+    };
+  }
+  rpc AddRegionToLocation(AddRegionToLocationRequest) returns (AddRegionToLocationResponse) {
+    option (google.api.http) = {
+      post: "/locations/{uuid}/add-region"
+      body: "*"
+    };
+  }
+  rpc RemoveCountryFromLocation(RemoveCountryFromLocationRequest) returns (RemoveCountryFromLocationResponse) {
+    option (google.api.http) = {
+      post: "/locations/{uuid}/remove-country"
+      body: "*"
+    };
+  }
+  rpc RemoveRegionFromLocation(RemoveRegionFromLocationRequest) returns (RemoveRegionFromLocationResponse) {
+    option (google.api.http) = {
+      post: "/locations/{uuid}/remove-region"
+      body: "*"
+    };
+  }
+  rpc AddChallengeToLocation(AddChallengeToLocationRequest) returns (AddChallengeToLocationResponse) {
+    option (google.api.http) = {
+      post: "/locations/{uuid}/add-challenge"
       body: "*"
     };
   }
@@ -183,7 +280,7 @@ message Challenge {
   }
 }
 
-message GetChallengesRequest {
+message GetChallengeCollectionRequest {
   oneof optional_fields {
     string fields = 1;
   }
@@ -201,12 +298,12 @@ message GetChallengesRequest {
   }
 }
 
-message GetChallengesResponse {
+message GetChallengeCollectionResponse {
   repeated Challenge data = 1;
   Meta meta = 2;
 }
 
-message GetChallengeRequest {
+message GetChallengeItemRequest {
   string uuid = 1;
 
   oneof optional_fields {
@@ -214,12 +311,12 @@ message GetChallengeRequest {
   }
 }
 
-message GetChallengeResponse {
+message GetChallengeItemResponse {
   Challenge data = 1;
   Meta meta = 2;
 }
 
-message PostChallengeRequest {
+message CreateChallengeRequest {
   string name = 1;
 
   string description = 2;
@@ -237,9 +334,9 @@ message PostChallengeRequest {
   string gallery = 8;
 }
 
-message PostChallengeResponse {}
+message CreateChallengeResponse {}
 
-message PutChallengeRequest {
+message UpdateChallengeRequest {
   string uuid = 1;
 
   string name = 2;
@@ -259,7 +356,7 @@ message PutChallengeRequest {
   string gallery = 9;
 }
 
-message PutChallengeResponse {}
+message UpdateChallengeResponse {}
 
 message DeleteChallengeRequest {
   string uuid = 1;
@@ -267,17 +364,23 @@ message DeleteChallengeRequest {
 
 message DeleteChallengeResponse {}
 
-message CommandChallengeRequest {
+message AddCategoryToChallengeRequest {
   string uuid = 1;
 
   string category_uuid = 2;
-
-  string command = 3;
 }
 
-message CommandChallengeResponse {}
+message AddCategoryToChallengeResponse {}
 
-message GetCategoriesRequest {
+message RemoveCategoryFromChallengeRequest {
+  string uuid = 1;
+
+  string category_uuid = 2;
+}
+
+message RemoveCategoryFromChallengeResponse {}
+
+message GetCategoryCollectionRequest {
   oneof optional_fields {
     string fields = 1;
   }
@@ -295,12 +398,12 @@ message GetCategoriesRequest {
   }
 }
 
-message GetCategoriesResponse {
+message GetCategoryCollectionResponse {
   repeated Category data = 1;
   Meta meta = 2;
 }
 
-message GetCategoryRequest {
+message GetCategoryItemRequest {
   string uuid = 1;
 
   oneof optional_fields {
@@ -308,24 +411,24 @@ message GetCategoryRequest {
   }
 }
 
-message GetCategoryResponse {
+message GetCategoryItemResponse {
   Category data = 1;
   Meta meta = 2;
 }
 
-message PostCategoryRequest {
+message CreateCategoryRequest {
   string name = 1;
 }
 
-message PostCategoryResponse {}
+message CreateCategoryResponse {}
 
-message PutCategoryRequest {
+message UpdateCategoryRequest {
   string uuid = 1;
 
   string name = 2;
 }
 
-message PutCategoryResponse {}
+message UpdateCategoryResponse {}
 
 message DeleteCategoryRequest {
   string uuid = 1;
@@ -334,23 +437,23 @@ message DeleteCategoryRequest {
 message DeleteCategoryResponse {}
 
 service ChallengeService {
-  rpc GetChallenges(GetChallengesRequest) returns (GetChallengesResponse) {
+  rpc GetChallengeCollection(GetChallengeCollectionRequest) returns (GetChallengeCollectionResponse) {
     option (google.api.http) = {
       get: "/challenges"
     };
   }
-  rpc GetChallenge(GetChallengeRequest) returns (GetChallengeResponse) {
+  rpc GetChallengeItem(GetChallengeItemRequest) returns (GetChallengeItemResponse) {
     option (google.api.http) = {
       get: "/challenges/{uuid}"
     };
   }
-  rpc PostChallenge(PostChallengeRequest) returns (PostChallengeResponse) {
+  rpc CreateChallenge(CreateChallengeRequest) returns (CreateChallengeResponse) {
     option (google.api.http) = {
       post: "/challenges"
       body: "*"
     };
   }
-  rpc PutChallenge(PutChallengeRequest) returns (PutChallengeResponse) {
+  rpc UpdateChallenge(UpdateChallengeRequest) returns (UpdateChallengeResponse) {
     option (google.api.http) = {
       put: "/challenges/{uuid}"
       body: "*"
@@ -361,30 +464,35 @@ service ChallengeService {
       delete: "/challenges/{uuid}"
     };
   }
-  rpc CommandChallenge(CommandChallengeRequest) returns (CommandChallengeResponse) {
+  rpc AddCategoryToChallenge(AddCategoryToChallengeRequest) returns (AddCategoryToChallengeResponse) {
     option (google.api.http) = {
-      post: "/challenges/{uuid}/{command}"
+      post: "/challenges/{uuid}/add-category"
       body: "*"
     };
   }
-
-  rpc GetCategories(GetCategoriesRequest) returns (GetCategoriesResponse) {
+  rpc RemoveCategoryFromChallenge(RemoveCategoryFromChallengeRequest) returns (RemoveCategoryFromChallengeResponse) {
+    option (google.api.http) = {
+      post: "/challenges/{uuid}/remove-category"
+      body: "*"
+    };
+  }
+  rpc GetCategoryCollection(GetCategoryCollectionRequest) returns (GetCategoryCollectionResponse) {
     option (google.api.http) = {
       get: "/categories"
     };
   }
-  rpc GetCategory(GetCategoryRequest) returns (GetCategoryResponse) {
+  rpc GetCategoryItem(GetCategoryItemRequest) returns (GetCategoryItemResponse) {
     option (google.api.http) = {
       get: "/categories/{uuid}"
     };
   }
-  rpc PostCategory(PostCategoryRequest) returns (PostCategoryResponse) {
+  rpc CreateCategory(CreateCategoryRequest) returns (CreateCategoryResponse) {
     option (google.api.http) = {
       post: "/categories"
       body: "*"
     };
   }
-  rpc PutCategory(PutCategoryRequest) returns (PutCategoryResponse) {
+  rpc UpdateCategory(UpdateCategoryRequest) returns (UpdateCategoryResponse) {
     option (google.api.http) = {
       put: "/categories/{uuid}"
       body: "*"
