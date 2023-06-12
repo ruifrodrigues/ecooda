@@ -2,6 +2,7 @@ package challenge
 
 import (
 	"encoding/json"
+	"github.com/ruifrodrigues/ecooda/config"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"gorm.io/datatypes"
@@ -16,18 +17,21 @@ type Aggregate interface {
 	ChangeLongitude(longitude float32)
 	ChangeThumbnail(thumbnail string)
 	ChangeGallery(gallery string) error
-	AddCategory(category *Category)
-	RemoveCategory(uuid string)
+	AddCategory(uuid string) error
+	RemoveCategory(uuid string) error
 }
 
 type AggregateRoot struct {
+	conf      config.Config
 	challenge *Challenge
 }
 
-func NewAggregateRoot(challenge *Challenge) Aggregate {
-	return &AggregateRoot{
-		challenge: challenge,
-	}
+func NewAggregateRoot(conf config.Config, challenge *Challenge) Aggregate {
+	aggregateRoot := new(AggregateRoot)
+	aggregateRoot.conf = conf
+	aggregateRoot.challenge = challenge
+
+	return aggregateRoot
 }
 
 func (a *AggregateRoot) ChangeName(name string) {
@@ -87,11 +91,20 @@ func (a *AggregateRoot) ChangeGallery(gallery string) error {
 	return nil
 }
 
-func (a *AggregateRoot) AddCategory(category *Category) {
+func (a *AggregateRoot) AddCategory(uuid string) error {
+	dbCtx := a.conf.Database.Ctx()
+
+	category, err := NewQuery(dbCtx).GetCategoryByUuid(uuid)
+	if err != nil {
+		return err
+	}
+
 	a.challenge.Categories = append(a.challenge.Categories, category)
+
+	return nil
 }
 
-func (a *AggregateRoot) RemoveCategory(uuid string) {
+func (a *AggregateRoot) RemoveCategory(uuid string) error {
 	categories := a.challenge.Categories
 
 	for i, category := range categories {
@@ -100,4 +113,6 @@ func (a *AggregateRoot) RemoveCategory(uuid string) {
 			a.challenge.Categories = categories[:len(categories)-1]
 		}
 	}
+
+	return nil
 }

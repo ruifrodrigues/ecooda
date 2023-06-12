@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 type DB interface {
@@ -25,7 +26,7 @@ func NewDatabase(dialer Dialector) DB {
 
 func (db *Database) OpenConnection() error {
 	config := new(gorm.Config)
-	//config.Logger = logger.Default.LogMode(logger.Info)
+	config.Logger = logger.Default.LogMode(logger.Info)
 
 	var err error
 

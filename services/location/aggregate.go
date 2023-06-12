@@ -4,7 +4,6 @@ import (
 	_uuid "github.com/google/uuid"
 	"github.com/ruifrodrigues/ecooda/config"
 	pb "github.com/ruifrodrigues/ecooda/stubs/go/ecooda/v1"
-	"github.com/ruifrodrigues/ecooda/utils"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -52,20 +51,11 @@ func (a *AggregateRoot) AddCountry(uuid string) error {
 		return status.Error(codes.FailedPrecondition, message)
 	}
 
-	if err := utils.ValidateUuid(uuid); err != nil {
+	dbCtx := a.conf.Database.Ctx()
+
+	country, err := NewQuery(dbCtx).GetLocation(uuid, pb.LocationType_LOCATION_TYPE_COUNTRY)
+	if err != nil {
 		return err
-	}
-
-	country := new(Location)
-
-	transaction := a.conf.Database.Ctx().
-		Select("id").
-		Where("uuid=?", uuid).
-		Where("type=?", int32(pb.LocationType_LOCATION_TYPE_COUNTRY)).
-		First(country)
-
-	if transaction.Error != nil {
-		return status.Error(codes.NotFound, "Location Not Found >> "+transaction.Error.Error())
 	}
 
 	region := a.location
@@ -82,20 +72,11 @@ func (a *AggregateRoot) AddRegion(uuid string) error {
 		return status.Error(codes.FailedPrecondition, message)
 	}
 
-	if err := utils.ValidateUuid(uuid); err != nil {
+	dbCtx := a.conf.Database.Ctx()
+
+	region, err := NewQuery(dbCtx).GetLocation(uuid, pb.LocationType_LOCATION_TYPE_REGION)
+	if err != nil {
 		return err
-	}
-
-	region := new(Location)
-
-	transaction := a.conf.Database.Ctx().
-		Select("id").
-		Where("uuid=?", uuid).
-		Where("type=?", int32(pb.LocationType_LOCATION_TYPE_REGION)).
-		First(region)
-
-	if transaction.Error != nil {
-		return status.Error(codes.NotFound, "Location Not Found >> "+transaction.Error.Error())
 	}
 
 	city := a.location
@@ -105,20 +86,11 @@ func (a *AggregateRoot) AddRegion(uuid string) error {
 }
 
 func (a *AggregateRoot) RemoveCountry(uuid string) error {
-	if err := utils.ValidateUuid(uuid); err != nil {
+	dbCtx := a.conf.Database.Ctx()
+
+	country, err := NewQuery(dbCtx).GetLocation(uuid, pb.LocationType_LOCATION_TYPE_COUNTRY)
+	if err != nil {
 		return err
-	}
-
-	country := new(Location)
-
-	transaction := a.conf.Database.Ctx().
-		Select("id").
-		Where("uuid=?", uuid).
-		Where("type=?", int32(pb.LocationType_LOCATION_TYPE_COUNTRY)).
-		First(country)
-
-	if transaction.Error != nil && transaction.Error.Error() == RecordNotFound {
-		return status.Error(codes.NotFound, transaction.Error.Error())
 	}
 
 	if *a.location.ParentID == country.ID {
@@ -129,20 +101,11 @@ func (a *AggregateRoot) RemoveCountry(uuid string) error {
 }
 
 func (a *AggregateRoot) RemoveRegion(uuid string) error {
-	if err := utils.ValidateUuid(uuid); err != nil {
+	dbCtx := a.conf.Database.Ctx()
+
+	region, err := NewQuery(dbCtx).GetLocation(uuid, pb.LocationType_LOCATION_TYPE_REGION)
+	if err != nil {
 		return err
-	}
-
-	region := new(Location)
-
-	result := a.conf.Database.Ctx().
-		Select("id").
-		Where("uuid=?", uuid).
-		Where("type=?", int32(pb.LocationType_LOCATION_TYPE_REGION)).
-		First(region)
-
-	if result.Error != nil && result.Error.Error() == RecordNotFound {
-		return status.Error(codes.NotFound, result.Error.Error())
 	}
 
 	if *a.location.ParentID == region.ID {
@@ -153,10 +116,6 @@ func (a *AggregateRoot) RemoveRegion(uuid string) error {
 }
 
 func (a *AggregateRoot) AddChallenge(uuid string) error {
-	if err := utils.ValidateUuid(uuid); err != nil {
-		return err
-	}
-
 	request := new(pb.GetChallengeItemRequest)
 	request.Uuid = uuid
 
@@ -164,7 +123,7 @@ func (a *AggregateRoot) AddChallenge(uuid string) error {
 
 	challenge, err := NewGrpcClient(grpcPort).GetChallengeItem(request)
 	if err != nil {
-		return status.Error(codes.NotFound, "Challenge not found >> "+err.Error())
+		return err
 	}
 
 	challenges := new(LocationChallenges)
@@ -179,5 +138,27 @@ func (a *AggregateRoot) AddChallenge(uuid string) error {
 }
 
 func (a *AggregateRoot) RemoveChallenge(uuid string) error {
+	request := new(pb.GetChallengeItemRequest)
+	request.Uuid = uuid
+
+	grpcPort := a.conf.Values.GrpcPort
+
+	challenge, err := NewGrpcClient(grpcPort).GetChallengeItem(request)
+	if err != nil {
+		return err
+	}
+
+	locationUuid, err := _uuid.Parse(challenge.Data.Uuid)
+	if err != nil {
+		return status.Error(codes.Internal, "Could not parse uuid to string >> "+err.Error())
+	}
+
+	for i, locationChallenge := range a.location.Challenges {
+		if locationChallenge.ChallengeUUID == locationUuid {
+			a.location.Challenges[i] = a.location.Challenges[len(a.location.Challenges)-1]
+			a.location.Challenges = a.location.Challenges[:len(a.location.Challenges)-1]
+		}
+	}
+
 	return nil
 }

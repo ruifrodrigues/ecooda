@@ -42,6 +42,7 @@ func NewChallengeService(conf config.Config) *Service {
 		"thumbnail",
 		"gallery",
 		"categories",
+		"locations",
 		"created_at",
 		"updated_at",
 	}

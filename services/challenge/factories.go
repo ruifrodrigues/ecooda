@@ -8,9 +8,9 @@ import (
 )
 
 var Seeders = config.Seeds{
-	&Category{}:           seedCategoriesTable,
-	&Challenge{}:          seedChallengeTable,
-	&CategoryChallenges{}: seedCategoryChallengesTable,
+	&Category{}:             seedCategoriesTable,
+	&Challenge{}:            seedChallengeTable,
+	&CategoriesChallenges{}: seedCategoryChallengesTable,
 }
 
 func seedCategoriesTable(db config.Database) {
@@ -641,7 +641,7 @@ func seedChallengeTable(db config.Database) {
 }
 
 func seedCategoryChallengesTable(db config.Database) {
-	var cc = []CategoryChallenges{
+	var cc = []CategoriesChallenges{
 		{
 			CategoryID:  utils.Pointer[uint](1),
 			ChallengeID: utils.Pointer[uint](1),

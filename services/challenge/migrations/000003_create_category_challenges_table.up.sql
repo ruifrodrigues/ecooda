@@ -1,10 +1,7 @@
 CREATE TABLE category_challenges
 (
-    category_id  INT                                 NOT NULL,
-    challenge_id INT                                 NOT NULL,
-    created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    updated_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-    deleted_at   TIMESTAMP                           NULL,
+    category_id  INT NOT NULL,
+    challenge_id INT NOT NULL,
 
     PRIMARY KEY (category_id, challenge_id),
     CONSTRAINT category_challenges_category_id_fk

@@ -9,6 +9,10 @@ import (
 func locationFields(dbCtx config.Database, records []*Location, fields []string, limit int32) []*pb.Location {
 	var data []*pb.Location
 
+	if len(records) == 0 {
+		return data
+	}
+
 	dataChan := make(chan *pb.Location, limit)
 
 	wg := sync.WaitGroup{}

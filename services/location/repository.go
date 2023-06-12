@@ -2,12 +2,11 @@ package location
 
 import (
 	"github.com/ruifrodrigues/ecooda/config"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
+	"gorm.io/gorm"
 )
 
 type Repository struct {
-	config   config.Config
+	conf     config.Config
 	location *Location
 }
 
@@ -16,35 +15,48 @@ type Behaviour interface {
 	Save() error
 }
 
-func NewRepository(config config.Config) Behaviour {
-	return &Repository{
-		config:   config,
-		location: &Location{},
-	}
+func NewRepository(conf config.Config) Behaviour {
+	repository := new(Repository)
+	repository.conf = conf
+
+	return repository
 }
 
 func (r *Repository) Get(uuid string) (Aggregate, error) {
-	dbCtx := r.config.Database.Ctx()
+	var err error
 
-	transaction := dbCtx.Select("*").
-		Where("uuid=?", uuid).
-		Preload("Challenges").
-		First(r.location)
+	dbCtx := r.conf.Database.Ctx()
 
-	if transaction.Error != nil {
-		return nil, status.Error(codes.NotFound, "Aggregate Not Found >> "+transaction.Error.Error())
+	r.location, err = NewQuery(dbCtx).LoadAggregateRoot(uuid)
+	if err != nil {
+		return nil, err
 	}
 
-	return NewAggregateRoot(r.config, r.location), nil
+	return NewAggregateRoot(r.conf, r.location), nil
 }
 
 func (r *Repository) Save() error {
-	dbCtx := r.config.Database.Ctx()
+	dbCtx := r.conf.Database.Ctx()
 
-	transaction := dbCtx.Save(r.location)
-	if transaction.Error != nil {
-		return status.Error(codes.Internal, "Aggregate Not Saved >> "+transaction.Error.Error())
-	}
+	// Start Transaction
+	err := dbCtx.Transaction(func(tx *gorm.DB) error {
+		query := NewQuery(dbCtx)
 
-	return nil
+		challengesUuids, err := query.GetChallengesUuids(r.location, 0, 0, "")
+		if err != nil {
+			return err
+		}
+
+		if err = query.DeleteChallenge(r.location, challengesUuids); err != nil {
+			return err
+		}
+
+		if err = query.SaveLocation(r.location); err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	return err
 }

@@ -6,11 +6,12 @@ import (
 )
 
 const (
-	AddCountryCommand    = "AddCountry"
-	AddRegionCommand     = "AddRegion"
-	AddChallengeCommand  = "AddChallenge"
-	RemoveCountryCommand = "RemoveCountry"
-	RemoveRegionCommand  = "RemoveRegion"
+	AddCountryCommand      = "AddCountry"
+	AddRegionCommand       = "AddRegion"
+	AddChallengeCommand    = "AddChallenge"
+	RemoveCountryCommand   = "RemoveCountry"
+	RemoveRegionCommand    = "RemoveRegion"
+	RemoveChallengeCommand = "RemoveChallenge"
 )
 
 type Value = reflect.Value
@@ -20,9 +21,10 @@ type Args struct {
 }
 
 func NewCommandArgs() *Args {
-	return &Args{
-		value: []Value{},
-	}
+	args := new(Args)
+	args.value = []Value{}
+
+	return args
 }
 
 func (arg *Args) Add(value interface{}) *Args {
@@ -44,9 +46,10 @@ type CommandHandler struct {
 }
 
 func NewCommandHandler(conf config.Config) Handler {
-	return &CommandHandler{
-		repository: NewRepository(conf),
-	}
+	handler := new(CommandHandler)
+	handler.repository = NewRepository(conf)
+
+	return handler
 }
 
 func (ch *CommandHandler) Handle(cmd Command) error {
@@ -82,10 +85,11 @@ type AddCountry struct {
 }
 
 func NewAddCountryCommand(uuid string, args *Args) Command {
-	return &AddCountry{
-		uuid: uuid,
-		args: args,
-	}
+	command := new(AddCountry)
+	command.uuid = uuid
+	command.args = args
+
+	return command
 }
 
 func (ac *AddCountry) GetUuid() string {
@@ -106,10 +110,11 @@ type AddRegion struct {
 }
 
 func NewAddRegionCommand(uuid string, args *Args) Command {
-	return &AddRegion{
-		uuid: uuid,
-		args: args,
-	}
+	command := new(AddRegion)
+	command.uuid = uuid
+	command.args = args
+
+	return command
 }
 
 func (ar *AddRegion) GetUuid() string {
@@ -130,10 +135,11 @@ type RemoveCountry struct {
 }
 
 func NewRemoveCountryCommand(uuid string, args *Args) Command {
-	return &RemoveCountry{
-		uuid: uuid,
-		args: args,
-	}
+	command := new(RemoveCountry)
+	command.uuid = uuid
+	command.args = args
+
+	return command
 }
 
 func (rc *RemoveCountry) GetUuid() string {
@@ -154,10 +160,11 @@ type RemoveRegion struct {
 }
 
 func NewRemoveRegionCommand(uuid string, args *Args) Command {
-	return &RemoveRegion{
-		uuid: uuid,
-		args: args,
-	}
+	command := new(RemoveRegion)
+	command.uuid = uuid
+	command.args = args
+
+	return command
 }
 
 func (rr *RemoveRegion) GetUuid() string {
@@ -178,10 +185,11 @@ type AddChallenge struct {
 }
 
 func NewAddChallengeCommand(uuid string, args *Args) Command {
-	return &AddChallenge{
-		uuid: uuid,
-		args: args,
-	}
+	command := new(AddChallenge)
+	command.uuid = uuid
+	command.args = args
+
+	return command
 }
 
 func (ac *AddChallenge) GetUuid() string {
@@ -194,4 +202,29 @@ func (ac *AddChallenge) GetArgs() []Value {
 
 func (ac *AddChallenge) ToString() string {
 	return AddChallengeCommand
+}
+
+type RemoveChallenge struct {
+	uuid string
+	args *Args
+}
+
+func NewRemoveChallengeCommand(uuid string, args *Args) Command {
+	command := new(RemoveChallenge)
+	command.uuid = uuid
+	command.args = args
+
+	return command
+}
+
+func (rc *RemoveChallenge) GetUuid() string {
+	return rc.uuid
+}
+
+func (rc *RemoveChallenge) GetArgs() []Value {
+	return rc.args.Get()
+}
+
+func (rc *RemoveChallenge) ToString() string {
+	return RemoveChallengeCommand
 }

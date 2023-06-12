@@ -57,6 +57,22 @@ message Location {
   }
 }
 
+message Locations {
+  Location data = 1;
+}
+
+message GetLocationFromChallengeRequest {
+  string uuid = 1;
+
+  oneof optional_fields {
+    string fields = 2;
+  }
+}
+
+message GetLocationFromChallengeResponse {
+  Location data = 1;
+}
+
 message GetLocationCollectionRequest {
   oneof optional_fields {
     string fields = 1;
@@ -159,7 +175,57 @@ message AddChallengeToLocationRequest {
 
 message AddChallengeToLocationResponse {}
 
+message RemoveChallengeFromLocationRequest {
+  string uuid = 1;
+
+  string challenge_uuid = 2;
+}
+
+message RemoveChallengeFromLocationResponse {}
+
+message GetChallengesFromLocationRequest{
+  string uuid = 1;
+
+  oneof optional_fields {
+    string fields = 2;
+  }
+
+  oneof optional_page_size {
+    int32 page_size = 3;
+  }
+
+  oneof optional_page {
+    int32 page = 4;
+  }
+
+  oneof optional_sort {
+    string sort = 5;
+  }
+}
+
+message GetChallengesFromLocationResponse {
+  repeated Challenge data = 1;
+  Meta meta = 2;
+}
+
+message GetLocationsFromChallengeRequest {
+  string uuid = 1;
+
+  oneof optional_fields {
+    string fields = 2;
+  }
+}
+
+message GetLocationsFromChallengeResponse {
+  Location data = 1;
+  Meta meta = 2;
+}
+
 service LocationService {
+  // private api
+  rpc GetLocationFromChallenge(GetLocationFromChallengeRequest) returns (GetLocationFromChallengeResponse) {}
+
+  // public API
   rpc GetLocationCollection(GetLocationCollectionRequest) returns (GetLocationCollectionResponse) {
     option (google.api.http) = {
       get: "/locations"
@@ -215,6 +281,17 @@ service LocationService {
     option (google.api.http) = {
       post: "/locations/{uuid}/add-challenge"
       body: "*"
+    };
+  }
+  rpc RemoveChallengeFromLocation(RemoveChallengeFromLocationRequest) returns (RemoveChallengeFromLocationResponse) {
+    option (google.api.http) = {
+      post: "/locations/{uuid}/remove-challenge"
+      body: "*"
+    };
+  }
+  rpc GetChallengesFromLocation(GetChallengesFromLocationRequest) returns (GetChallengesFromLocationResponse) {
+    option (google.api.http) = {
+      get: "/locations/{uuid}/challenges"
     };
   }
 }
@@ -278,6 +355,10 @@ message Challenge {
   oneof optional_categories {
     Categories categories = 12;
   }
+
+  oneof optional_locations {
+    Locations locations = 13;
+  }
 }
 
 message GetChallengeCollectionRequest {
@@ -313,6 +394,31 @@ message GetChallengeItemRequest {
 
 message GetChallengeItemResponse {
   Challenge data = 1;
+  Meta meta = 2;
+}
+
+message GetChallengeItemsBatchRequest {
+  repeated string uuids = 1;
+
+  oneof optional_fields {
+    string fields = 2;
+  }
+
+  oneof optional_page_size {
+    int32 page_size = 3;
+  }
+
+  oneof optional_page {
+    int32 page = 4;
+  }
+
+  oneof optional_sort {
+    string sort = 5;
+  }
+}
+
+message GetChallengeItemsBatchResponse {
+  repeated Challenge data = 1;
   Meta meta = 2;
 }
 
@@ -437,6 +543,10 @@ message DeleteCategoryRequest {
 message DeleteCategoryResponse {}
 
 service ChallengeService {
+  // private API
+  rpc GetChallengeItemsBatch(GetChallengeItemsBatchRequest) returns (GetChallengeItemsBatchResponse) {}
+
+  // public API
   rpc GetChallengeCollection(GetChallengeCollectionRequest) returns (GetChallengeCollectionResponse) {
     option (google.api.http) = {
       get: "/challenges"

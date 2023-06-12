@@ -11,6 +11,7 @@ import (
 
 type Client interface {
 	GetChallengeItem(request *pb.GetChallengeItemRequest) (*pb.GetChallengeItemResponse, error)
+	GetChallengeItemsBatch(request *pb.GetChallengeItemsBatchRequest) (*pb.GetChallengeItemsBatchResponse, error)
 }
 
 type GrpcClient struct {
@@ -31,6 +32,15 @@ func NewGrpcClient(port string) Client {
 
 func (grpc *GrpcClient) GetChallengeItem(request *pb.GetChallengeItemRequest) (*pb.GetChallengeItemResponse, error) {
 	item, err := grpc.client.GetChallengeItem(context.Background(), request)
+	if err != nil {
+		return nil, status.Error(codes.NotFound, "Challenge not found >> "+err.Error())
+	}
+
+	return item, nil
+}
+
+func (grpc *GrpcClient) GetChallengeItemsBatch(request *pb.GetChallengeItemsBatchRequest) (*pb.GetChallengeItemsBatchResponse, error) {
+	item, err := grpc.client.GetChallengeItemsBatch(context.Background(), request)
 	if err != nil {
 		return nil, status.Error(codes.NotFound, "Challenge not found >> "+err.Error())
 	}

@@ -19,22 +19,28 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	LocationService_GetLocationCollection_FullMethodName     = "/ecooda.v1.LocationService/GetLocationCollection"
-	LocationService_GetLocationItem_FullMethodName           = "/ecooda.v1.LocationService/GetLocationItem"
-	LocationService_CreateLocation_FullMethodName            = "/ecooda.v1.LocationService/CreateLocation"
-	LocationService_UpdateLocation_FullMethodName            = "/ecooda.v1.LocationService/UpdateLocation"
-	LocationService_DeleteLocation_FullMethodName            = "/ecooda.v1.LocationService/DeleteLocation"
-	LocationService_AddCountryToLocation_FullMethodName      = "/ecooda.v1.LocationService/AddCountryToLocation"
-	LocationService_AddRegionToLocation_FullMethodName       = "/ecooda.v1.LocationService/AddRegionToLocation"
-	LocationService_RemoveCountryFromLocation_FullMethodName = "/ecooda.v1.LocationService/RemoveCountryFromLocation"
-	LocationService_RemoveRegionFromLocation_FullMethodName  = "/ecooda.v1.LocationService/RemoveRegionFromLocation"
-	LocationService_AddChallengeToLocation_FullMethodName    = "/ecooda.v1.LocationService/AddChallengeToLocation"
+	LocationService_GetLocationFromChallenge_FullMethodName    = "/ecooda.v1.LocationService/GetLocationFromChallenge"
+	LocationService_GetLocationCollection_FullMethodName       = "/ecooda.v1.LocationService/GetLocationCollection"
+	LocationService_GetLocationItem_FullMethodName             = "/ecooda.v1.LocationService/GetLocationItem"
+	LocationService_CreateLocation_FullMethodName              = "/ecooda.v1.LocationService/CreateLocation"
+	LocationService_UpdateLocation_FullMethodName              = "/ecooda.v1.LocationService/UpdateLocation"
+	LocationService_DeleteLocation_FullMethodName              = "/ecooda.v1.LocationService/DeleteLocation"
+	LocationService_AddCountryToLocation_FullMethodName        = "/ecooda.v1.LocationService/AddCountryToLocation"
+	LocationService_AddRegionToLocation_FullMethodName         = "/ecooda.v1.LocationService/AddRegionToLocation"
+	LocationService_RemoveCountryFromLocation_FullMethodName   = "/ecooda.v1.LocationService/RemoveCountryFromLocation"
+	LocationService_RemoveRegionFromLocation_FullMethodName    = "/ecooda.v1.LocationService/RemoveRegionFromLocation"
+	LocationService_AddChallengeToLocation_FullMethodName      = "/ecooda.v1.LocationService/AddChallengeToLocation"
+	LocationService_RemoveChallengeFromLocation_FullMethodName = "/ecooda.v1.LocationService/RemoveChallengeFromLocation"
+	LocationService_GetChallengesFromLocation_FullMethodName   = "/ecooda.v1.LocationService/GetChallengesFromLocation"
 )
 
 // LocationServiceClient is the client API for LocationService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type LocationServiceClient interface {
+	// private api
+	GetLocationFromChallenge(ctx context.Context, in *GetLocationFromChallengeRequest, opts ...grpc.CallOption) (*GetLocationFromChallengeResponse, error)
+	// public API
 	GetLocationCollection(ctx context.Context, in *GetLocationCollectionRequest, opts ...grpc.CallOption) (*GetLocationCollectionResponse, error)
 	GetLocationItem(ctx context.Context, in *GetLocationItemRequest, opts ...grpc.CallOption) (*GetLocationItemResponse, error)
 	CreateLocation(ctx context.Context, in *CreateLocationRequest, opts ...grpc.CallOption) (*CreateLocationResponse, error)
@@ -45,6 +51,8 @@ type LocationServiceClient interface {
 	RemoveCountryFromLocation(ctx context.Context, in *RemoveCountryFromLocationRequest, opts ...grpc.CallOption) (*RemoveCountryFromLocationResponse, error)
 	RemoveRegionFromLocation(ctx context.Context, in *RemoveRegionFromLocationRequest, opts ...grpc.CallOption) (*RemoveRegionFromLocationResponse, error)
 	AddChallengeToLocation(ctx context.Context, in *AddChallengeToLocationRequest, opts ...grpc.CallOption) (*AddChallengeToLocationResponse, error)
+	RemoveChallengeFromLocation(ctx context.Context, in *RemoveChallengeFromLocationRequest, opts ...grpc.CallOption) (*RemoveChallengeFromLocationResponse, error)
+	GetChallengesFromLocation(ctx context.Context, in *GetChallengesFromLocationRequest, opts ...grpc.CallOption) (*GetChallengesFromLocationResponse, error)
 }
 
 type locationServiceClient struct {
@@ -53,6 +61,15 @@ type locationServiceClient struct {
 
 func NewLocationServiceClient(cc grpc.ClientConnInterface) LocationServiceClient {
 	return &locationServiceClient{cc}
+}
+
+func (c *locationServiceClient) GetLocationFromChallenge(ctx context.Context, in *GetLocationFromChallengeRequest, opts ...grpc.CallOption) (*GetLocationFromChallengeResponse, error) {
+	out := new(GetLocationFromChallengeResponse)
+	err := c.cc.Invoke(ctx, LocationService_GetLocationFromChallenge_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *locationServiceClient) GetLocationCollection(ctx context.Context, in *GetLocationCollectionRequest, opts ...grpc.CallOption) (*GetLocationCollectionResponse, error) {
@@ -145,10 +162,31 @@ func (c *locationServiceClient) AddChallengeToLocation(ctx context.Context, in *
 	return out, nil
 }
 
+func (c *locationServiceClient) RemoveChallengeFromLocation(ctx context.Context, in *RemoveChallengeFromLocationRequest, opts ...grpc.CallOption) (*RemoveChallengeFromLocationResponse, error) {
+	out := new(RemoveChallengeFromLocationResponse)
+	err := c.cc.Invoke(ctx, LocationService_RemoveChallengeFromLocation_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *locationServiceClient) GetChallengesFromLocation(ctx context.Context, in *GetChallengesFromLocationRequest, opts ...grpc.CallOption) (*GetChallengesFromLocationResponse, error) {
+	out := new(GetChallengesFromLocationResponse)
+	err := c.cc.Invoke(ctx, LocationService_GetChallengesFromLocation_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // LocationServiceServer is the server API for LocationService service.
 // All implementations must embed UnimplementedLocationServiceServer
 // for forward compatibility
 type LocationServiceServer interface {
+	// private api
+	GetLocationFromChallenge(context.Context, *GetLocationFromChallengeRequest) (*GetLocationFromChallengeResponse, error)
+	// public API
 	GetLocationCollection(context.Context, *GetLocationCollectionRequest) (*GetLocationCollectionResponse, error)
 	GetLocationItem(context.Context, *GetLocationItemRequest) (*GetLocationItemResponse, error)
 	CreateLocation(context.Context, *CreateLocationRequest) (*CreateLocationResponse, error)
@@ -159,6 +197,8 @@ type LocationServiceServer interface {
 	RemoveCountryFromLocation(context.Context, *RemoveCountryFromLocationRequest) (*RemoveCountryFromLocationResponse, error)
 	RemoveRegionFromLocation(context.Context, *RemoveRegionFromLocationRequest) (*RemoveRegionFromLocationResponse, error)
 	AddChallengeToLocation(context.Context, *AddChallengeToLocationRequest) (*AddChallengeToLocationResponse, error)
+	RemoveChallengeFromLocation(context.Context, *RemoveChallengeFromLocationRequest) (*RemoveChallengeFromLocationResponse, error)
+	GetChallengesFromLocation(context.Context, *GetChallengesFromLocationRequest) (*GetChallengesFromLocationResponse, error)
 	mustEmbedUnimplementedLocationServiceServer()
 }
 
@@ -166,6 +206,9 @@ type LocationServiceServer interface {
 type UnimplementedLocationServiceServer struct {
 }
 
+func (UnimplementedLocationServiceServer) GetLocationFromChallenge(context.Context, *GetLocationFromChallengeRequest) (*GetLocationFromChallengeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetLocationFromChallenge not implemented")
+}
 func (UnimplementedLocationServiceServer) GetLocationCollection(context.Context, *GetLocationCollectionRequest) (*GetLocationCollectionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetLocationCollection not implemented")
 }
@@ -196,6 +239,12 @@ func (UnimplementedLocationServiceServer) RemoveRegionFromLocation(context.Conte
 func (UnimplementedLocationServiceServer) AddChallengeToLocation(context.Context, *AddChallengeToLocationRequest) (*AddChallengeToLocationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddChallengeToLocation not implemented")
 }
+func (UnimplementedLocationServiceServer) RemoveChallengeFromLocation(context.Context, *RemoveChallengeFromLocationRequest) (*RemoveChallengeFromLocationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveChallengeFromLocation not implemented")
+}
+func (UnimplementedLocationServiceServer) GetChallengesFromLocation(context.Context, *GetChallengesFromLocationRequest) (*GetChallengesFromLocationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetChallengesFromLocation not implemented")
+}
 func (UnimplementedLocationServiceServer) mustEmbedUnimplementedLocationServiceServer() {}
 
 // UnsafeLocationServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -207,6 +256,24 @@ type UnsafeLocationServiceServer interface {
 
 func RegisterLocationServiceServer(s grpc.ServiceRegistrar, srv LocationServiceServer) {
 	s.RegisterService(&LocationService_ServiceDesc, srv)
+}
+
+func _LocationService_GetLocationFromChallenge_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetLocationFromChallengeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LocationServiceServer).GetLocationFromChallenge(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LocationService_GetLocationFromChallenge_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LocationServiceServer).GetLocationFromChallenge(ctx, req.(*GetLocationFromChallengeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _LocationService_GetLocationCollection_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -389,6 +456,42 @@ func _LocationService_AddChallengeToLocation_Handler(srv interface{}, ctx contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _LocationService_RemoveChallengeFromLocation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveChallengeFromLocationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LocationServiceServer).RemoveChallengeFromLocation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LocationService_RemoveChallengeFromLocation_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LocationServiceServer).RemoveChallengeFromLocation(ctx, req.(*RemoveChallengeFromLocationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _LocationService_GetChallengesFromLocation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetChallengesFromLocationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LocationServiceServer).GetChallengesFromLocation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LocationService_GetChallengesFromLocation_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LocationServiceServer).GetChallengesFromLocation(ctx, req.(*GetChallengesFromLocationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // LocationService_ServiceDesc is the grpc.ServiceDesc for LocationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -396,6 +499,10 @@ var LocationService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "ecooda.v1.LocationService",
 	HandlerType: (*LocationServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetLocationFromChallenge",
+			Handler:    _LocationService_GetLocationFromChallenge_Handler,
+		},
 		{
 			MethodName: "GetLocationCollection",
 			Handler:    _LocationService_GetLocationCollection_Handler,
@@ -436,12 +543,21 @@ var LocationService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "AddChallengeToLocation",
 			Handler:    _LocationService_AddChallengeToLocation_Handler,
 		},
+		{
+			MethodName: "RemoveChallengeFromLocation",
+			Handler:    _LocationService_RemoveChallengeFromLocation_Handler,
+		},
+		{
+			MethodName: "GetChallengesFromLocation",
+			Handler:    _LocationService_GetChallengesFromLocation_Handler,
+		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "ecooda/v1/ecooda.proto",
 }
 
 const (
+	ChallengeService_GetChallengeItemsBatch_FullMethodName      = "/ecooda.v1.ChallengeService/GetChallengeItemsBatch"
 	ChallengeService_GetChallengeCollection_FullMethodName      = "/ecooda.v1.ChallengeService/GetChallengeCollection"
 	ChallengeService_GetChallengeItem_FullMethodName            = "/ecooda.v1.ChallengeService/GetChallengeItem"
 	ChallengeService_CreateChallenge_FullMethodName             = "/ecooda.v1.ChallengeService/CreateChallenge"
@@ -460,6 +576,9 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ChallengeServiceClient interface {
+	// private API
+	GetChallengeItemsBatch(ctx context.Context, in *GetChallengeItemsBatchRequest, opts ...grpc.CallOption) (*GetChallengeItemsBatchResponse, error)
+	// public API
 	GetChallengeCollection(ctx context.Context, in *GetChallengeCollectionRequest, opts ...grpc.CallOption) (*GetChallengeCollectionResponse, error)
 	GetChallengeItem(ctx context.Context, in *GetChallengeItemRequest, opts ...grpc.CallOption) (*GetChallengeItemResponse, error)
 	CreateChallenge(ctx context.Context, in *CreateChallengeRequest, opts ...grpc.CallOption) (*CreateChallengeResponse, error)
@@ -480,6 +599,15 @@ type challengeServiceClient struct {
 
 func NewChallengeServiceClient(cc grpc.ClientConnInterface) ChallengeServiceClient {
 	return &challengeServiceClient{cc}
+}
+
+func (c *challengeServiceClient) GetChallengeItemsBatch(ctx context.Context, in *GetChallengeItemsBatchRequest, opts ...grpc.CallOption) (*GetChallengeItemsBatchResponse, error) {
+	out := new(GetChallengeItemsBatchResponse)
+	err := c.cc.Invoke(ctx, ChallengeService_GetChallengeItemsBatch_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *challengeServiceClient) GetChallengeCollection(ctx context.Context, in *GetChallengeCollectionRequest, opts ...grpc.CallOption) (*GetChallengeCollectionResponse, error) {
@@ -594,6 +722,9 @@ func (c *challengeServiceClient) DeleteCategory(ctx context.Context, in *DeleteC
 // All implementations must embed UnimplementedChallengeServiceServer
 // for forward compatibility
 type ChallengeServiceServer interface {
+	// private API
+	GetChallengeItemsBatch(context.Context, *GetChallengeItemsBatchRequest) (*GetChallengeItemsBatchResponse, error)
+	// public API
 	GetChallengeCollection(context.Context, *GetChallengeCollectionRequest) (*GetChallengeCollectionResponse, error)
 	GetChallengeItem(context.Context, *GetChallengeItemRequest) (*GetChallengeItemResponse, error)
 	CreateChallenge(context.Context, *CreateChallengeRequest) (*CreateChallengeResponse, error)
@@ -613,6 +744,9 @@ type ChallengeServiceServer interface {
 type UnimplementedChallengeServiceServer struct {
 }
 
+func (UnimplementedChallengeServiceServer) GetChallengeItemsBatch(context.Context, *GetChallengeItemsBatchRequest) (*GetChallengeItemsBatchResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetChallengeItemsBatch not implemented")
+}
 func (UnimplementedChallengeServiceServer) GetChallengeCollection(context.Context, *GetChallengeCollectionRequest) (*GetChallengeCollectionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetChallengeCollection not implemented")
 }
@@ -660,6 +794,24 @@ type UnsafeChallengeServiceServer interface {
 
 func RegisterChallengeServiceServer(s grpc.ServiceRegistrar, srv ChallengeServiceServer) {
 	s.RegisterService(&ChallengeService_ServiceDesc, srv)
+}
+
+func _ChallengeService_GetChallengeItemsBatch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetChallengeItemsBatchRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ChallengeServiceServer).GetChallengeItemsBatch(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ChallengeService_GetChallengeItemsBatch_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ChallengeServiceServer).GetChallengeItemsBatch(ctx, req.(*GetChallengeItemsBatchRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _ChallengeService_GetChallengeCollection_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -885,6 +1037,10 @@ var ChallengeService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "ecooda.v1.ChallengeService",
 	HandlerType: (*ChallengeServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetChallengeItemsBatch",
+			Handler:    _ChallengeService_GetChallengeItemsBatch_Handler,
+		},
 		{
 			MethodName: "GetChallengeCollection",
 			Handler:    _ChallengeService_GetChallengeCollection_Handler,

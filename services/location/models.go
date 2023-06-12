@@ -20,10 +20,7 @@ type Location struct {
 }
 
 type LocationChallenges struct {
-	gorm.Model
 	LocationID    *uint     `json:"location_id" gorm:"primaryKey"`
 	ChallengeUUID uuid.UUID `json:"challenge_uuid" gorm:"primaryKey"`
-	CreatedAt     time.Time `json:"created_at" gorm:"autoCreateTime"`
-	UpdatedAt     time.Time `json:"updated_at" gorm:"autoCreateTime"`
-	DeletedAt     time.Time `json:"deleted_at" gorm:"default:null"`
+	Location      *Location `gorm:"references:ID"`
 }

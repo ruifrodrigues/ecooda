@@ -7,6 +7,10 @@ import (
 	"time"
 )
 
+type Tabler interface {
+	TableName() string
+}
+
 type Category struct {
 	gorm.Model
 	ID         uint           `json:"id" gorm:"primaryKey"`
@@ -15,7 +19,7 @@ type Category struct {
 	CreatedAt  time.Time      `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt  time.Time      `json:"updated_at" gorm:"autoCreateTime"`
 	DeletedAt  gorm.DeletedAt `json:"deleted_at" gorm:"default:null"`
-	Challenges []*Challenge   `gorm:"many2many:category_challenges"`
+	Challenges []*Challenge   `gorm:"many2many:categories_challenges"`
 }
 
 type Challenge struct {
@@ -33,14 +37,10 @@ type Challenge struct {
 	CreatedAt   time.Time      `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt   time.Time      `json:"updated_at" gorm:"autoCreateTime"`
 	DeletedAt   gorm.DeletedAt `json:"deleted_at" gorm:"default:null"`
-	Categories  []*Category    `gorm:"many2many:category_challenges"`
+	Categories  []*Category    `gorm:"many2many:categories_challenges"`
 }
 
-type CategoryChallenges struct {
-	gorm.Model
-	CategoryID  *uint     `json:"category_id" gorm:"primaryKey"`
-	ChallengeID *uint     `json:"challenge_id" gorm:"primaryKey"`
-	CreatedAt   time.Time `json:"created_at" gorm:"autoCreateTime"`
-	UpdatedAt   time.Time `json:"updated_at" gorm:"autoCreateTime"`
-	DeletedAt   time.Time `json:"deleted_at" gorm:"default:null"`
+type CategoriesChallenges struct {
+	CategoryID  *uint `json:"category_id" gorm:"primaryKey"`
+	ChallengeID *uint `json:"challenge_id" gorm:"primaryKey"`
 }

@@ -7,7 +7,7 @@ import (
 )
 
 type Repository struct {
-	dbCtx     config.Database
+	conf      config.Config
 	challenge *Challenge
 }
 
@@ -16,28 +16,30 @@ type Behaviour interface {
 	Save() error
 }
 
-func NewRepository(dbCtx config.Database) Behaviour {
-	return &Repository{
-		dbCtx,
-		&Challenge{},
-	}
+func NewRepository(conf config.Config) Behaviour {
+	repository := new(Repository)
+	repository.conf = conf
+
+	return repository
 }
 
 func (r *Repository) Get(uuid string) (Aggregate, error) {
-	transaction := r.dbCtx.Select("*").
-		Preload("Categories").
-		Where("uuid=?", uuid).
-		First(r.challenge)
+	var err error
 
-	if transaction.Error != nil {
-		return nil, status.Error(codes.NotFound, "Aggregate Not Found >> "+transaction.Error.Error())
+	dbCtx := r.conf.Database.Ctx()
+
+	r.challenge, err = NewQuery(dbCtx).LoadAggregateRoot(uuid)
+	if err != nil {
+		return nil, err
 	}
 
-	return NewAggregateRoot(r.challenge), nil
+	return NewAggregateRoot(r.conf, r.challenge), nil
 }
 
 func (r *Repository) Save() error {
-	err := r.dbCtx.Model(r.challenge).Association("Categories").Replace(r.challenge.Categories)
+	dbCtx := r.conf.Database.Ctx()
+
+	err := NewQuery(dbCtx).SaveChallenge(r.challenge)
 	if err != nil {
 		return status.Error(codes.Internal, "Aggregate Not Saved >> "+err.Error())
 	}

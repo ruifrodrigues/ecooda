@@ -23,35 +23,35 @@ func challengeFields(records []*Challenge, fields []string, limit int32) []*pb.C
 				}
 
 				if field == "name" {
-					item.OptionalName = locationName(item, record)
+					item.OptionalName = name(item, record)
 				}
 
 				if field == "description" {
-					item.OptionalDescription = locationDescription(item, record)
+					item.OptionalDescription = description(item, record)
 				}
 
 				if field == "street" {
-					item.OptionalStreet = locationStreet(item, record)
+					item.OptionalStreet = street(item, record)
 				}
 
 				if field == "postcode" {
-					item.OptionalPostcode = locationPostcode(item, record)
+					item.OptionalPostcode = postcode(item, record)
 				}
 
 				if field == "latitude" {
-					item.OptionalLatitude = locationLatitude(item, record)
+					item.OptionalLatitude = latitude(item, record)
 				}
 
 				if field == "longitude" {
-					item.OptionalLongitude = locationLongitude(item, record)
+					item.OptionalLongitude = longitude(item, record)
 				}
 
 				if field == "thumbnail" {
-					item.OptionalThumbnail = locationThumbnail(item, record)
+					item.OptionalThumbnail = thumbnail(item, record)
 				}
 
 				if field == "gallery" {
-					item.OptionalGallery = locationGallery(item, record)
+					item.OptionalGallery = gallery(item, record)
 				}
 
 				if field == "created_at" {
@@ -63,7 +63,11 @@ func challengeFields(records []*Challenge, fields []string, limit int32) []*pb.C
 				}
 
 				if field == "categories" {
-					item.OptionalCategories = locationCategories(item, record)
+					item.OptionalCategories = categories(item, record)
+				}
+
+				if field == "locations" {
+					item.OptionalLocations = locations(item, record)
 				}
 			}
 
@@ -80,7 +84,7 @@ func challengeFields(records []*Challenge, fields []string, limit int32) []*pb.C
 	return data
 }
 
-func locationName(item *pb.Challenge, record *Challenge) *pb.Challenge_Name {
+func name(item *pb.Challenge, record *Challenge) *pb.Challenge_Name {
 	name := ""
 	if record.Name != "" {
 		name = record.Name
@@ -92,7 +96,7 @@ func locationName(item *pb.Challenge, record *Challenge) *pb.Challenge_Name {
 	return item.OptionalName.(*pb.Challenge_Name)
 }
 
-func locationDescription(item *pb.Challenge, record *Challenge) *pb.Challenge_Description {
+func description(item *pb.Challenge, record *Challenge) *pb.Challenge_Description {
 	description := ""
 	if record.Description != "" {
 		description = record.Description
@@ -105,7 +109,7 @@ func locationDescription(item *pb.Challenge, record *Challenge) *pb.Challenge_De
 	return item.OptionalDescription.(*pb.Challenge_Description)
 }
 
-func locationStreet(item *pb.Challenge, record *Challenge) *pb.Challenge_Street {
+func street(item *pb.Challenge, record *Challenge) *pb.Challenge_Street {
 	street := ""
 	if record.Street != "" {
 		street = record.Street
@@ -118,7 +122,7 @@ func locationStreet(item *pb.Challenge, record *Challenge) *pb.Challenge_Street 
 	return item.OptionalStreet.(*pb.Challenge_Street)
 }
 
-func locationPostcode(item *pb.Challenge, record *Challenge) *pb.Challenge_Postcode {
+func postcode(item *pb.Challenge, record *Challenge) *pb.Challenge_Postcode {
 	postcode := ""
 	if record.Postcode != "" {
 		postcode = record.Postcode
@@ -131,7 +135,7 @@ func locationPostcode(item *pb.Challenge, record *Challenge) *pb.Challenge_Postc
 	return item.OptionalPostcode.(*pb.Challenge_Postcode)
 }
 
-func locationLatitude(item *pb.Challenge, record *Challenge) *pb.Challenge_Latitude {
+func latitude(item *pb.Challenge, record *Challenge) *pb.Challenge_Latitude {
 	var latitude float32 = 0
 	if record.Latitude != 0 {
 		latitude = record.Latitude
@@ -144,7 +148,7 @@ func locationLatitude(item *pb.Challenge, record *Challenge) *pb.Challenge_Latit
 	return item.OptionalLatitude.(*pb.Challenge_Latitude)
 }
 
-func locationLongitude(item *pb.Challenge, record *Challenge) *pb.Challenge_Longitude {
+func longitude(item *pb.Challenge, record *Challenge) *pb.Challenge_Longitude {
 	var longitude float32 = 0
 	if record.Longitude != 0 {
 		longitude = record.Longitude
@@ -157,7 +161,7 @@ func locationLongitude(item *pb.Challenge, record *Challenge) *pb.Challenge_Long
 	return item.OptionalLongitude.(*pb.Challenge_Longitude)
 }
 
-func locationThumbnail(item *pb.Challenge, record *Challenge) *pb.Challenge_Thumbnail {
+func thumbnail(item *pb.Challenge, record *Challenge) *pb.Challenge_Thumbnail {
 	thumbnail := ""
 	if record.Thumbnail != "" {
 		thumbnail = record.Thumbnail
@@ -170,7 +174,7 @@ func locationThumbnail(item *pb.Challenge, record *Challenge) *pb.Challenge_Thum
 	return item.OptionalThumbnail.(*pb.Challenge_Thumbnail)
 }
 
-func locationGallery(item *pb.Challenge, record *Challenge) *pb.Challenge_Gallery {
+func gallery(item *pb.Challenge, record *Challenge) *pb.Challenge_Gallery {
 	gallery := ""
 	if record.Gallery != nil {
 		gallery = record.Gallery.String()
@@ -183,7 +187,7 @@ func locationGallery(item *pb.Challenge, record *Challenge) *pb.Challenge_Galler
 	return item.OptionalGallery.(*pb.Challenge_Gallery)
 }
 
-func locationCategories(item *pb.Challenge, record *Challenge) *pb.Challenge_Categories {
+func categories(item *pb.Challenge, record *Challenge) *pb.Challenge_Categories {
 	item.OptionalCategories = &pb.Challenge_Categories{
 		Categories: &pb.Categories{
 			Data: categoryFields(record.Categories, []string{"uuid", "name", "created_at", "updated_at"}, 25),
@@ -191,6 +195,26 @@ func locationCategories(item *pb.Challenge, record *Challenge) *pb.Challenge_Cat
 	}
 
 	return item.OptionalCategories.(*pb.Challenge_Categories)
+}
+
+func locations(item *pb.Challenge, record *Challenge) *pb.Challenge_Locations {
+	optionalFields := new(pb.GetLocationFromChallengeRequest_Fields)
+	optionalFields.Fields = "uuid,name,type,parents,created_at,updated_at"
+
+	request := new(pb.GetLocationFromChallengeRequest)
+	request.Uuid = record.UUID.String()
+	request.OptionalFields = optionalFields
+
+	location := NewGrpcClient(":50051").GetLocationFromChallenge(request)
+	_locations := new(pb.Locations)
+	_locations.Data = location.Data
+
+	challengeLocations := new(pb.Challenge_Locations)
+	challengeLocations.Locations = _locations
+
+	item.OptionalLocations = challengeLocations
+
+	return item.OptionalLocations.(*pb.Challenge_Locations)
 }
 
 func categoryFields(records []*Category, fields []string, limit int32) []*pb.Category {
