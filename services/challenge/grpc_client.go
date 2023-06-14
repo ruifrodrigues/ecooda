@@ -30,10 +30,7 @@ func NewGrpcClient(port string) Client {
 func (grpc *GrpcClient) GetLocationFromChallenge(request *pb.GetLocationFromChallengeRequest) *pb.GetLocationFromChallengeResponse {
 	item, err := grpc.client.GetLocationFromChallenge(context.Background(), request)
 	if err != nil {
-		locations := new(pb.GetLocationFromChallengeResponse)
-		locations.Data = new(pb.Location)
-
-		return new(pb.GetLocationFromChallengeResponse)
+		return &pb.GetLocationFromChallengeResponse{}
 	}
 
 	return item

@@ -27,9 +27,10 @@ type AggregateRoot struct {
 }
 
 func NewAggregateRoot(conf config.Config, challenge *Challenge) Aggregate {
-	aggregateRoot := new(AggregateRoot)
-	aggregateRoot.conf = conf
-	aggregateRoot.challenge = challenge
+	aggregateRoot := &AggregateRoot{
+		conf:      conf,
+		challenge: challenge,
+	}
 
 	return aggregateRoot
 }
@@ -92,9 +93,7 @@ func (a *AggregateRoot) ChangeGallery(gallery string) error {
 }
 
 func (a *AggregateRoot) AddCategory(uuid string) error {
-	dbCtx := a.conf.Database.Ctx()
-
-	category, err := NewQuery(dbCtx).GetCategoryByUuid(uuid)
+	category, err := NewQuery(a.conf).GetCategoryByUuid(uuid)
 	if err != nil {
 		return err
 	}

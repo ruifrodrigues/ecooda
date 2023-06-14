@@ -1,0 +1,5 @@
+# curl --location --request GET 'http://ecooda.local:8080/locations?fields=name,type,parents'
+GET http://ecooda.local:8080/locations?fields=name,type,parents
+
+###
+

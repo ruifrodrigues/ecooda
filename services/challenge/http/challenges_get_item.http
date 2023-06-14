@@ -1,0 +1,6 @@
+# curl --location --request GET 'http://ecooda.local:8080/challenges/320ddd53-5261-46e1-ae1b-7e11d0f77538?fields=name,description,street,postcode,latitude,longitude,thumbnail,gallery,categories,locations'
+GET http://ecooda.local:8080/challenges/320ddd53-5261-46e1-ae1b-7e11d0f77538?
+    fields=name,description,street,postcode,latitude,longitude,thumbnail,gallery,categories,locations
+
+###
+

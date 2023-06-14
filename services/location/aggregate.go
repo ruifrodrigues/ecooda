@@ -51,9 +51,7 @@ func (a *AggregateRoot) AddCountry(uuid string) error {
 		return status.Error(codes.FailedPrecondition, message)
 	}
 
-	dbCtx := a.conf.Database.Ctx()
-
-	country, err := NewQuery(dbCtx).GetLocation(uuid, pb.LocationType_LOCATION_TYPE_COUNTRY)
+	country, err := NewQuery(a.conf).GetLocation(uuid, pb.LocationType_LOCATION_TYPE_COUNTRY)
 	if err != nil {
 		return err
 	}
@@ -72,9 +70,7 @@ func (a *AggregateRoot) AddRegion(uuid string) error {
 		return status.Error(codes.FailedPrecondition, message)
 	}
 
-	dbCtx := a.conf.Database.Ctx()
-
-	region, err := NewQuery(dbCtx).GetLocation(uuid, pb.LocationType_LOCATION_TYPE_REGION)
+	region, err := NewQuery(a.conf).GetLocation(uuid, pb.LocationType_LOCATION_TYPE_REGION)
 	if err != nil {
 		return err
 	}
@@ -86,9 +82,7 @@ func (a *AggregateRoot) AddRegion(uuid string) error {
 }
 
 func (a *AggregateRoot) RemoveCountry(uuid string) error {
-	dbCtx := a.conf.Database.Ctx()
-
-	country, err := NewQuery(dbCtx).GetLocation(uuid, pb.LocationType_LOCATION_TYPE_COUNTRY)
+	country, err := NewQuery(a.conf).GetLocation(uuid, pb.LocationType_LOCATION_TYPE_COUNTRY)
 	if err != nil {
 		return err
 	}
@@ -101,9 +95,7 @@ func (a *AggregateRoot) RemoveCountry(uuid string) error {
 }
 
 func (a *AggregateRoot) RemoveRegion(uuid string) error {
-	dbCtx := a.conf.Database.Ctx()
-
-	region, err := NewQuery(dbCtx).GetLocation(uuid, pb.LocationType_LOCATION_TYPE_REGION)
+	region, err := NewQuery(a.conf).GetLocation(uuid, pb.LocationType_LOCATION_TYPE_REGION)
 	if err != nil {
 		return err
 	}
@@ -116,20 +108,23 @@ func (a *AggregateRoot) RemoveRegion(uuid string) error {
 }
 
 func (a *AggregateRoot) AddChallenge(uuid string) error {
-	request := new(pb.GetChallengeItemRequest)
-	request.Uuid = uuid
+	request := &pb.GetChallengeItemRequest{
+		Uuid: uuid,
+	}
 
 	grpcPort := a.conf.Values.GrpcPort
-
 	challenge, err := NewGrpcClient(grpcPort).GetChallengeItem(request)
 	if err != nil {
 		return err
 	}
 
-	challenges := new(LocationChallenges)
-	challenges.ChallengeUUID, err = _uuid.Parse(challenge.Data.Uuid)
+	challengesUuids, err := _uuid.Parse(challenge.Data.Uuid)
 	if err != nil {
 		return status.Error(codes.Internal, "Could not parse uuid to string >> "+err.Error())
+	}
+
+	challenges := &LocationChallenges{
+		ChallengeUUID: challengesUuids,
 	}
 
 	a.location.Challenges = append(a.location.Challenges, challenges)

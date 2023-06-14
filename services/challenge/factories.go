@@ -1,7 +1,7 @@
 package challenge
 
 import (
-	"github.com/google/uuid"
+	_uuid "github.com/google/uuid"
 	"github.com/ruifrodrigues/ecooda/config"
 	"github.com/ruifrodrigues/ecooda/utils"
 	"gorm.io/datatypes"
@@ -17,27 +17,27 @@ func seedCategoriesTable(db config.Database) {
 	var c = []Category{
 		{
 			ID:   1,
-			UUID: uuid.New(),
+			UUID: _uuid.New(),
 			Name: "culture",
 		},
 		{
 			ID:   2,
-			UUID: uuid.New(),
+			UUID: _uuid.New(),
 			Name: "nature",
 		},
 		{
 			ID:   3,
-			UUID: uuid.New(),
+			UUID: _uuid.New(),
 			Name: "food",
 		},
 		{
 			ID:   4,
-			UUID: uuid.New(),
+			UUID: _uuid.New(),
 			Name: "sports",
 		},
 		{
 			ID:   5,
-			UUID: uuid.New(),
+			UUID: _uuid.New(),
 			Name: "health",
 		},
 	}
@@ -49,7 +49,7 @@ func seedChallengeTable(db config.Database) {
 	var c = []Challenge{
 		{
 			ID:          1,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Museu Colecção Berardo",
 			Description: "description",
 			Latitude:    39.5572,
@@ -63,7 +63,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          2,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Museu Nacional de História Natural e da Ciência",
 			Description: "description",
 			Latitude:    39.5572,
@@ -77,7 +77,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          3,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "MAAT - Museu de Arte, Arquitetura e Tecnologia",
 			Description: "description",
 			Latitude:    39.5572,
@@ -91,7 +91,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          4,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Casa Fernando Pessoa",
 			Description: "description",
 			Latitude:    39.5572,
@@ -105,7 +105,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          5,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Museu Nacional do Desporto",
 			Description: "description",
 			Latitude:    39.5572,
@@ -119,7 +119,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          6,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Museu Arqueológico do Carmo",
 			Description: "description",
 			Latitude:    39.5572,
@@ -133,7 +133,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          7,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Museu do Aljube",
 			Description: "description",
 			Latitude:    39.5572,
@@ -147,7 +147,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          8,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Casa das Histórias",
 			Description: "description",
 			Latitude:    39.5572,
@@ -161,7 +161,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          9,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Fundação Arpad Szenes - Vieira da Silva",
 			Description: "description",
 			Latitude:    39.5572,
@@ -175,7 +175,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          10,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Museu do Dinheiro",
 			Description: "description",
 			Latitude:    39.5572,
@@ -189,7 +189,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          11,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Museu Calouste Gulbenkian - Colecção do Fundador",
 			Description: "description",
 			Latitude:    39.5572,
@@ -203,7 +203,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          12,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Museu do Oriente",
 			Description: "description",
 			Latitude:    39.5572,
@@ -217,7 +217,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          13,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Atelier-Museu Júlio Pomar",
 			Description: "description",
 			Latitude:    39.5572,
@@ -231,7 +231,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          14,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Museu Nacional de Arqueologia",
 			Description: "description",
 			Latitude:    39.5572,
@@ -245,7 +245,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          15,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Museu Nacional do Azulejo",
 			Description: "description",
 			Latitude:    39.5572,
@@ -259,7 +259,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          16,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Museu Nacional de Arte Antiga",
 			Description: "description",
 			Latitude:    39.5572,
@@ -273,7 +273,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          17,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Museu da Marioneta",
 			Description: "description",
 			Latitude:    39.5572,
@@ -287,7 +287,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          18,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Museu Militar",
 			Description: "description",
 			Latitude:    39.5572,
@@ -301,7 +301,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          19,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Museu da Carris",
 			Description: "description",
 			Latitude:    39.5572,
@@ -315,7 +315,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          20,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Museu da Música",
 			Description: "description",
 			Latitude:    39.5572,
@@ -329,7 +329,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          21,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Museu da Presidência da República",
 			Description: "description",
 			Latitude:    39.5572,
@@ -343,7 +343,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          22,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Museu de Lisboa - Santo António",
 			Description: "description",
 			Latitude:    39.5572,
@@ -357,7 +357,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          23,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Museu do Fado",
 			Description: "description",
 			Latitude:    39.5572,
@@ -371,7 +371,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          24,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Museu da Água",
 			Description: "description",
 			Latitude:    39.5572,
@@ -385,7 +385,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          25,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Museu de Lisboa – Teatro Romano",
 			Description: "description",
 			Latitude:    39.5572,
@@ -399,7 +399,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          26,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Casa Museu Dr. Anastácio Gonçalves",
 			Description: "description",
 			Latitude:    39.5572,
@@ -413,7 +413,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          27,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Museu de Lisboa - Palácio Pimenta",
 			Description: "description",
 			Latitude:    39.5572,
@@ -427,7 +427,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          28,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Museu de Arte Popular",
 			Description: "description",
 			Latitude:    39.5572,
@@ -441,7 +441,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          29,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Museu da Farmácia",
 			Description: "description",
 			Latitude:    39.5572,
@@ -455,7 +455,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          30,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Museu Nacional dos Coches",
 			Description: "description",
 			Latitude:    39.5572,
@@ -469,7 +469,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          31,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Museu Nacional de Arte Contemporânea do Chiado",
 			Description: "description",
 			Latitude:    39.5572,
@@ -483,7 +483,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          32,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Museu Nacional do Teatro e da Dança",
 			Description: "description",
 			Latitude:    39.5572,
@@ -497,7 +497,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          33,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Museu das Comunicações",
 			Description: "description",
 			Latitude:    39.5572,
@@ -511,7 +511,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          34,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Museu da Saúde",
 			Description: "description",
 			Latitude:    39.5572,
@@ -525,7 +525,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          35,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Museu Nacional de Etnologia",
 			Description: "description",
 			Latitude:    39.5572,
@@ -539,7 +539,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          36,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Museu de Lisboa - Torreão Poente",
 			Description: "description",
 			Latitude:    39.5572,
@@ -553,7 +553,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          37,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Museu Rafael Bordalo Pinheiro",
 			Description: "description",
 			Latitude:    39.5572,
@@ -567,7 +567,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          38,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Museu Nacional do Traje",
 			Description: "description",
 			Latitude:    39.5572,
@@ -581,7 +581,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          39,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Museu Benfica - Cosme Damião",
 			Description: "description",
 			Latitude:    39.5572,
@@ -595,7 +595,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          40,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "NewsMuseum",
 			Description: "description",
 			Latitude:    39.5572,
@@ -609,7 +609,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          41,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Museu do Palácio Nacional da Ajuda",
 			Description: "description",
 			Latitude:    39.5572,
@@ -623,7 +623,7 @@ func seedChallengeTable(db config.Database) {
 		},
 		{
 			ID:          42,
-			UUID:        uuid.New(),
+			UUID:        _uuid.New(),
 			Name:        "Museu de Macau",
 			Description: "description",
 			Latitude:    39.5572,

@@ -1,0 +1,14 @@
+# curl --location --request POST 'http://ecooda.local:8080/categories'
+#--header 'Content-Type: application/json'
+#--data-raw '{
+#    "name": "teste"
+#}'
+POST http://ecooda.local:8080/categories
+Content-Type: application/json
+
+{
+  "name": "teste"
+}
+
+###
+

@@ -17,18 +17,15 @@ type Behaviour interface {
 }
 
 func NewRepository(conf config.Config) Behaviour {
-	repository := new(Repository)
-	repository.conf = conf
-
-	return repository
+	return &Repository{
+		conf: conf,
+	}
 }
 
 func (r *Repository) Get(uuid string) (Aggregate, error) {
 	var err error
 
-	dbCtx := r.conf.Database.Ctx()
-
-	r.challenge, err = NewQuery(dbCtx).LoadAggregateRoot(uuid)
+	r.challenge, err = NewQuery(r.conf).LoadAggregateRoot(uuid)
 	if err != nil {
 		return nil, err
 	}
@@ -37,9 +34,7 @@ func (r *Repository) Get(uuid string) (Aggregate, error) {
 }
 
 func (r *Repository) Save() error {
-	dbCtx := r.conf.Database.Ctx()
-
-	err := NewQuery(dbCtx).SaveChallenge(r.challenge)
+	err := NewQuery(r.conf).SaveChallenge(r.challenge)
 	if err != nil {
 		return status.Error(codes.Internal, "Aggregate Not Saved >> "+err.Error())
 	}

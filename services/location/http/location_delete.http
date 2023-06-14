@@ -1,0 +1,5 @@
+# curl --location --request DELETE 'http://ecooda.local:8080/locations/358152b0-2151-4b9b-98cb-34e37ca511d5'
+DELETE http://ecooda.local:8080/locations/358152b0-2151-4b9b-98cb-34e37ca511d5
+
+###
+

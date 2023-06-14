@@ -16,18 +16,15 @@ type Behaviour interface {
 }
 
 func NewRepository(conf config.Config) Behaviour {
-	repository := new(Repository)
-	repository.conf = conf
-
-	return repository
+	return &Repository{
+		conf: conf,
+	}
 }
 
 func (r *Repository) Get(uuid string) (Aggregate, error) {
 	var err error
 
-	dbCtx := r.conf.Database.Ctx()
-
-	r.location, err = NewQuery(dbCtx).LoadAggregateRoot(uuid)
+	r.location, err = NewQuery(r.conf).LoadAggregateRoot(uuid)
 	if err != nil {
 		return nil, err
 	}
@@ -36,11 +33,9 @@ func (r *Repository) Get(uuid string) (Aggregate, error) {
 }
 
 func (r *Repository) Save() error {
-	dbCtx := r.conf.Database.Ctx()
-
 	// Start Transaction
-	err := dbCtx.Transaction(func(tx *gorm.DB) error {
-		query := NewQuery(dbCtx)
+	err := r.conf.Database.Ctx().Transaction(func(tx *gorm.DB) error {
+		query := NewQuery(r.conf)
 
 		challengesUuids, err := query.GetChallengesUuids(r.location, 0, 0, "")
 		if err != nil {

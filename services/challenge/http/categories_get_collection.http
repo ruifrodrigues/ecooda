@@ -1,0 +1,5 @@
+# curl --location --request GET 'http://ecooda.local:8080/categories?fields=name&sort=id&page_size=42&page=1'
+GET http://ecooda.local:8080/categories?fields=name&sort=id&page_size=42&page=1
+
+###
+

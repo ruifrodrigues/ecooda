@@ -26,18 +26,16 @@ func (s *Service) GetLocationFromChallenge(ctx context.Context, req *pb.GetLocat
 				return nil, err
 			}
 
-			dbCtx := s.conf.Database.Ctx()
-
 			item := new(pb.GetLocationFromChallengeResponse)
 
-			record, err := NewQuery(dbCtx).GetLocationsByChallengeUuid(uuid, "*")
+			record, err := NewQuery(s.conf).GetLocationsByChallengeUuid(uuid, "*")
 			if err != nil {
 				return item, err
 			}
 
 			requestedFields := api.RequestedFields(req.GetFields(), s.fields.Location)
 
-			item.Data = locationFields(dbCtx, []*Location{record}, requestedFields, 1)[0]
+			item.Data = NewData(s.conf, []*Location{record}, requestedFields, 1).Generate()[0]
 
 			_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "200"))
 

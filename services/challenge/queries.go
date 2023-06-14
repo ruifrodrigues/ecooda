@@ -28,19 +28,20 @@ type Reader interface {
 }
 
 type Query struct {
-	dbCtx config.Database
+	conf config.Config
 }
 
-func NewQuery(dbCtx config.Database) Reader {
+func NewQuery(conf config.Config) Reader {
 	return &Query{
-		dbCtx,
+		conf,
 	}
 }
 
 func (q *Query) LoadAggregateRoot(uuid string) (*Challenge, error) {
 	var challenge *Challenge
 
-	query := q.dbCtx.Select("*").
+	query := q.conf.Database.Ctx().
+		Select("*").
 		Preload("Categories").
 		Where("uuid=?", uuid).
 		First(&challenge)
@@ -56,7 +57,9 @@ func (q *Query) CountChallenges() int32 {
 	var records []*Challenge
 	var count int64 = 0
 
-	q.dbCtx.Find(&records).Count(&count)
+	q.conf.Database.Ctx().
+		Find(&records).
+		Count(&count)
 
 	return int32(count)
 }
@@ -65,7 +68,9 @@ func (q *Query) CountCategories() int32 {
 	var records []*Category
 	var count int64 = 0
 
-	q.dbCtx.Find(&records).Count(&count)
+	q.conf.Database.Ctx().
+		Find(&records).
+		Count(&count)
 
 	return int32(count)
 }
@@ -73,13 +78,17 @@ func (q *Query) CountCategories() int32 {
 func (q *Query) GetChallengeByUuid(uuid string) (*Challenge, error) {
 	var record *Challenge
 
-	transaction := q.dbCtx.
+	query := q.conf.Database.Ctx().
 		Preload("Categories").
 		Where("uuid=?", uuid).
 		Find(&record)
 
-	if transaction.Error != nil && transaction.Error.Error() == RecordNotFound {
-		return nil, status.Error(codes.NotFound, transaction.Error.Error())
+	if query.Error != nil {
+		return nil, status.Error(codes.Internal, query.Error.Error())
+	}
+
+	if record.UUID.String() == "00000000-0000-0000-0000-000000000000" {
+		return nil, status.Error(codes.NotFound, RecordNotFound)
 	}
 
 	return record, nil
@@ -88,13 +97,18 @@ func (q *Query) GetChallengeByUuid(uuid string) (*Challenge, error) {
 func (q *Query) GetChallenges(offset, limit int, order string, uuids []string) ([]*Challenge, error) {
 	var records []*Challenge
 
-	query := q.dbCtx.Preload("Categories")
+	query := q.conf.Database.Ctx().
+		Preload("Categories")
 
 	if len(uuids) > 0 {
 		query = query.Where("uuid in ?", uuids)
 	}
 
-	query.Offset(offset).Limit(limit).Order(order).Find(&records)
+	query.
+		Offset(offset).
+		Limit(limit).
+		Order(order).
+		Find(&records)
 
 	if len(records) == 0 {
 		return nil, status.Error(codes.NotFound, NoRecordsAvailable)
@@ -106,13 +120,16 @@ func (q *Query) GetChallenges(offset, limit int, order string, uuids []string) (
 func (q *Query) GetCategoryByUuid(uuid string) (*Category, error) {
 	var record *Category
 
-	transaction := q.dbCtx.
-		Preload("Categories").
+	query := q.conf.Database.Ctx().
 		Where("uuid=?", uuid).
 		Find(&record)
 
-	if transaction.Error != nil && transaction.Error.Error() == RecordNotFound {
-		return nil, status.Error(codes.NotFound, transaction.Error.Error())
+	if query.Error != nil {
+		return nil, status.Error(codes.Internal, query.Error.Error())
+	}
+
+	if record.UUID.String() == "00000000-0000-0000-0000-000000000000" {
+		return nil, status.Error(codes.NotFound, RecordNotFound)
 	}
 
 	return record, nil
@@ -121,7 +138,7 @@ func (q *Query) GetCategoryByUuid(uuid string) (*Category, error) {
 func (q *Query) GetCategories(offset, limit int, order string) ([]*Category, error) {
 	var records []*Category
 
-	q.dbCtx.
+	q.conf.Database.Ctx().
 		Offset(offset).
 		Limit(limit).
 		Order(order).
@@ -135,58 +152,74 @@ func (q *Query) GetCategories(offset, limit int, order string) ([]*Category, err
 }
 
 func (q *Query) CreateChallenge(fields map[string]interface{}) error {
-	result := q.dbCtx.Model(&Challenge{}).Create(fields)
-	if result.Error != nil {
-		return status.Error(codes.AlreadyExists, result.Error.Error())
+	query := q.conf.Database.Ctx().
+		Model(&Challenge{}).
+		Create(fields)
+
+	if query.Error != nil {
+		return status.Error(codes.AlreadyExists, query.Error.Error())
 	}
 
 	return nil
 }
 
 func (q *Query) CreateCategory(fields map[string]interface{}) error {
-	result := q.dbCtx.Model(&Category{}).Create(fields)
-	if result.Error != nil {
-		return status.Error(codes.AlreadyExists, result.Error.Error())
+	query := q.conf.Database.Ctx().
+		Model(&Category{}).
+		Create(fields)
+
+	if query.Error != nil {
+		return status.Error(codes.AlreadyExists, query.Error.Error())
 	}
 
 	return nil
 }
 
 func (q *Query) UpdateCategory(uuid string, fields map[string]interface{}) error {
-	transaction := q.dbCtx.
+	query := q.conf.Database.Ctx().
 		Model(&Category{}).
 		Where("uuid=?", uuid).
 		Updates(fields)
 
-	if transaction.Error != nil && transaction.Error.Error() == "record not found" {
-		return status.Error(codes.NotFound, transaction.Error.Error())
+	if query.Error != nil && query.Error.Error() == RecordNotFound {
+		return status.Error(codes.NotFound, query.Error.Error())
 	}
 
 	return nil
 }
 
 func (q *Query) DeleteChallenge(uuid string) error {
-	transaction := q.dbCtx.Where("uuid=?", uuid).Delete(&Challenge{})
-	if transaction.Error != nil && transaction.Error.Error() == RecordNotFound {
-		return status.Error(codes.NotFound, transaction.Error.Error())
+	query := q.conf.Database.Ctx().
+		Where("uuid=?", uuid).
+		Delete(&Challenge{})
+
+	if query.Error != nil && query.Error.Error() == RecordNotFound {
+		return status.Error(codes.NotFound, query.Error.Error())
 	}
 
 	return nil
 }
 
 func (q *Query) DeleteCategory(uuid string) error {
-	transaction := q.dbCtx.Where("uuid=?", uuid).Delete(&Category{})
-	if transaction.Error != nil && transaction.Error.Error() == RecordNotFound {
-		return status.Error(codes.NotFound, transaction.Error.Error())
+	query := q.conf.Database.Ctx().
+		Where("uuid=?", uuid).
+		Delete(&Category{})
+
+	if query.Error != nil && query.Error.Error() == RecordNotFound {
+		return status.Error(codes.NotFound, query.Error.Error())
 	}
 
 	return nil
 }
 
 func (q *Query) SaveChallenge(challenge *Challenge) error {
-	err := q.dbCtx.Model(challenge).Association("Categories").Replace(challenge.Categories)
-	if err != nil {
-		return status.Error(codes.Internal, "Aggregate Not Saved >> "+err.Error())
+	query := q.conf.Database.Ctx().
+		Model(challenge).
+		Association("Categories").
+		Replace(challenge.Categories)
+
+	if query != nil {
+		return status.Error(codes.Internal, "Aggregate Not Saved >> "+query.Error())
 	}
 
 	return nil

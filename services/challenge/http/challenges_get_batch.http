@@ -1,0 +1,28 @@
+# curl --location --request POST 'http://ecooda.local:8080/challenges/batch'
+#--header 'Content-Type: application/json'
+#--data-raw '{
+#    "uuids": [
+#        "320ddd53-5261-46e1-ae1b-7e11d0f77538",
+#        "36bb6b4f-cf0d-419a-8150-2722ecbd463a"
+#    ],
+#    "fields": "uuid,name,description,street,postcode,latitude,longitude,thumbnail,gallery,categories,created_at,updated_at",
+#    "sort": "id",
+#    "page_size": 1,
+#    "page": 2
+#}'
+POST http://ecooda.local:8080/challenges/batch
+Content-Type: application/json
+
+{
+  "uuids": [
+    "320ddd53-5261-46e1-ae1b-7e11d0f77538",
+    "36bb6b4f-cf0d-419a-8150-2722ecbd463a"
+  ],
+  "fields": "uuid,name,description,street,postcode,latitude,longitude,thumbnail,gallery,categories,created_at,updated_at",
+  "sort": "id",
+  "page_size": 1,
+  "page": 2
+}
+
+###
+

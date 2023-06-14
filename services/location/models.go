@@ -1,7 +1,7 @@
 package location
 
 import (
-	"github.com/google/uuid"
+	_uuid "github.com/google/uuid"
 	"gorm.io/gorm"
 	"time"
 )
@@ -9,7 +9,7 @@ import (
 type Location struct {
 	gorm.Model
 	ID         uint           `json:"id" gorm:"primaryKey"`
-	UUID       uuid.UUID      `json:"uuid" validate:"required,uuid4"`
+	UUID       _uuid.UUID     `json:"uuid" validate:"required,uuid4"`
 	ParentID   *uint          `json:"parent_id" gorm:"default:null"`
 	Name       string         `json:"name" validate:"required,string" gorm:"size:127;index:idx_name,unique"`
 	Type       int32          `json:"type" validate:"required:numeric" gorm:"default:0"`
@@ -20,7 +20,7 @@ type Location struct {
 }
 
 type LocationChallenges struct {
-	LocationID    *uint     `json:"location_id" gorm:"primaryKey"`
-	ChallengeUUID uuid.UUID `json:"challenge_uuid" gorm:"primaryKey"`
-	Location      *Location `gorm:"references:ID"`
+	LocationID    *uint      `json:"location_id" gorm:"primaryKey"`
+	ChallengeUUID _uuid.UUID `json:"challenge_uuid" gorm:"primaryKey"`
+	Location      *Location  `gorm:"references:ID"`
 }

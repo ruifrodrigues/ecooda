@@ -1,0 +1,14 @@
+# curl --location --request DELETE 'http://ecooda.local:8080/categories/032c7f57-d5ac-45ee-9eec-ee342ebc9a62'
+#--header 'Content-Type: application/json'
+#--data-raw '{
+#    "name": "test2"
+#}'
+DELETE http://ecooda.local:8080/categories/032c7f57-d5ac-45ee-9eec-ee342ebc9a62
+Content-Type: application/json
+
+{
+  "name": "test2"
+}
+
+###
+

@@ -1,0 +1,18 @@
+# curl --location --request POST 'http://ecooda.local:8080/locations'
+#--header 'Content-Type: application/json'
+#--data-raw '{
+#    "name": "Lisboa",
+#    "type": 4,
+#    "parent_uuid": "21bc159b-f71b-4ed4-bb72-f7ab8aff5d4c"
+#}'
+POST http://ecooda.local:8080/locations
+Content-Type: application/json
+
+{
+  "name": "Lisboa",
+  "type": 4,
+  "parent_uuid": "21bc159b-f71b-4ed4-bb72-f7ab8aff5d4c"
+}
+
+###
+

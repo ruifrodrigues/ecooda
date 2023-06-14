@@ -1,0 +1,14 @@
+# curl --location --request POST 'http://ecooda.local:8080/locations/21bc159b-f71b-4ed4-bb72-f7ab8aff5d4c/add-challenge'
+#--header 'Content-Type: application/json'
+#--data-raw '{
+#    "challenge_uuid": "36bb6b4f-cf0d-419a-8150-2722ecbd463a"
+#}'
+POST http://ecooda.local:8080/locations/21bc159b-f71b-4ed4-bb72-f7ab8aff5d4c/add-challenge
+Content-Type: application/json
+
+{
+  "challenge_uuid": "36bb6b4f-cf0d-419a-8150-2722ecbd463a"
+}
+
+###
+

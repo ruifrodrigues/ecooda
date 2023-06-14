@@ -1,7 +1,7 @@
 package challenge
 
 import (
-	"github.com/google/uuid"
+	_uuid "github.com/google/uuid"
 	"gorm.io/datatypes"
 	"gorm.io/gorm"
 	"time"
@@ -14,7 +14,7 @@ type Tabler interface {
 type Category struct {
 	gorm.Model
 	ID         uint           `json:"id" gorm:"primaryKey"`
-	UUID       uuid.UUID      `json:"uuid" validate:"required,uuid4"`
+	UUID       _uuid.UUID     `json:"uuid" validate:"required,uuid4"`
 	Name       string         `json:"name" validate:"required,string" gorm:"size:127;index:idx_name,unique"`
 	CreatedAt  time.Time      `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt  time.Time      `json:"updated_at" gorm:"autoCreateTime"`
@@ -25,7 +25,7 @@ type Category struct {
 type Challenge struct {
 	gorm.Model
 	ID          uint           `json:"id"`
-	UUID        uuid.UUID      `json:"uuid" validate:"required,uuid4"`
+	UUID        _uuid.UUID     `json:"uuid" validate:"required,uuid4"`
 	Name        string         `json:"name" validate:"required,string" gorm:"size:127;index:idx_name,unique"`
 	Description string         `json:"description" validate:"required,string" gorm:"size:255;default:null"`
 	Street      string         `json:"street" validate:"string" gorm:"size:127;default:null"`

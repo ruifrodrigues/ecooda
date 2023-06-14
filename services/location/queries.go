@@ -29,19 +29,20 @@ type Reader interface {
 }
 
 type Query struct {
-	dbCtx config.Database
+	conf config.Config
 }
 
-func NewQuery(dbCtx config.Database) Reader {
+func NewQuery(conf config.Config) Reader {
 	return &Query{
-		dbCtx,
+		conf,
 	}
 }
 
 func (q *Query) LoadAggregateRoot(uuid string) (*Location, error) {
 	var location *Location
 
-	query := q.dbCtx.Select("*").
+	query := q.conf.Database.Ctx().
+		Select("*").
 		Where("uuid=?", uuid).
 		Preload("Challenges").
 		First(&location)
@@ -57,7 +58,9 @@ func (q *Query) CountLocations() int32 {
 	var records []*Location
 	var count int64 = 0
 
-	q.dbCtx.Find(&records).Count(&count)
+	q.conf.Database.Ctx().
+		Find(&records).
+		Count(&count)
 
 	return int32(count)
 }
@@ -66,7 +69,10 @@ func (q *Query) CountChallenges(location *Location) int32 {
 	var records []*LocationChallenges
 	var count int64 = 0
 
-	q.dbCtx.Where("location_id=?", location.ID).Find(&records).Count(&count)
+	q.conf.Database.Ctx().
+		Where("location_id=?", location.ID).
+		Find(&records).
+		Count(&count)
 
 	return int32(count)
 }
@@ -74,13 +80,17 @@ func (q *Query) CountChallenges(location *Location) int32 {
 func (q *Query) GetLocationByUuid(uuid string, fields string) (*Location, error) {
 	var record *Location
 
-	query := q.dbCtx.
+	query := q.conf.Database.Ctx().
 		Select(fields).
 		Where("uuid=?", uuid).
 		Find(&record)
 
-	if query.Error != nil && query.Error.Error() == RecordNotFound {
-		return nil, status.Error(codes.NotFound, query.Error.Error())
+	if query.Error != nil {
+		return nil, status.Error(codes.Internal, query.Error.Error())
+	}
+
+	if record.UUID.String() == "00000000-0000-0000-0000-000000000000" {
+		return nil, status.Error(codes.NotFound, RecordNotFound)
 	}
 
 	return record, nil
@@ -89,7 +99,12 @@ func (q *Query) GetLocationByUuid(uuid string, fields string) (*Location, error)
 func (q *Query) GetLocations(offset, limit int, order string) ([]*Location, error) {
 	var records []*Location
 
-	q.dbCtx.Offset(offset).Limit(limit).Order(order).Find(&records)
+	q.conf.Database.Ctx().
+		Offset(offset).
+		Limit(limit).
+		Order(order).
+		Find(&records)
+
 	if len(records) == 0 {
 		return nil, status.Error(codes.NotFound, NoRecordsAvailable)
 	}
@@ -100,14 +115,14 @@ func (q *Query) GetLocations(offset, limit int, order string) ([]*Location, erro
 func (q *Query) GetLocationsByChallengeUuid(uuid string, fields string) (*Location, error) {
 	var record *LocationChallenges
 
-	query := q.dbCtx.
+	query := q.conf.Database.Ctx().
 		Select(fields).
 		Preload("Location").
 		Where("challenge_uuid=?", uuid).
 		First(&record)
 
-	if query.Error != nil && query.Error.Error() == RecordNotFound {
-		return nil, status.Error(codes.NotFound, query.Error.Error())
+	if query.Error != nil {
+		return nil, status.Error(codes.Internal, query.Error.Error())
 	}
 
 	return record.Location, nil
@@ -116,7 +131,7 @@ func (q *Query) GetLocationsByChallengeUuid(uuid string, fields string) (*Locati
 func (q *Query) GetChallengesUuids(location *Location, offset int, limit int, order string) ([]string, error) {
 	var locationChallenges []*LocationChallenges
 
-	query := q.dbCtx.
+	query := q.conf.Database.Ctx().
 		Select("challenge_uuid").
 		Where("location_id=?", location.ID)
 
@@ -136,22 +151,28 @@ func (q *Query) GetChallengesUuids(location *Location, offset int, limit int, or
 func (q *Query) GetLocation(uuid string, locationType pb.LocationType) (*Location, error) {
 	country := new(Location)
 
-	query := q.dbCtx.Ctx().
+	query := q.conf.Database.Ctx().
 		Select("id").
 		Where("uuid=?", uuid).
 		Where("type=?", int32(locationType)).
 		First(country)
 
 	if query.Error != nil {
-		return nil, status.Error(codes.NotFound, "Location Not Found >> "+query.Error.Error())
+		return nil, status.Error(codes.Internal, query.Error.Error())
+	}
+
+	if country.UUID.String() == "00000000-0000-0000-0000-000000000000" {
+		return nil, status.Error(codes.NotFound, RecordNotFound)
 	}
 
 	return country, nil
 }
 
 func (q *Query) DeleteLocation(uuid string) error {
+	query := q.conf.Database.Ctx().
+		Where("uuid=?", uuid).
+		Delete(&Location{})
 
-	query := q.dbCtx.Where("uuid=?", uuid).Delete(&Location{})
 	if query.Error != nil && query.Error.Error() == RecordNotFound {
 		return status.Error(codes.NotFound, query.Error.Error())
 	}
@@ -162,7 +183,7 @@ func (q *Query) DeleteLocation(uuid string) error {
 func (q *Query) DeleteChallenge(location *Location, challengeUuids []string) error {
 	for _, challengeUuid := range challengeUuids {
 		if !utils.InArray(challengeUuid, extractChallengeUuids(location.Challenges)) {
-			query := q.dbCtx.
+			query := q.conf.Database.Ctx().
 				Where("location_id=?", location.ID).
 				Where("challenge_uuid=?", challengeUuid).
 				Delete(&LocationChallenges{})
@@ -177,7 +198,10 @@ func (q *Query) DeleteChallenge(location *Location, challengeUuids []string) err
 }
 
 func (q *Query) CreateLocation(fields map[string]interface{}) error {
-	result := q.dbCtx.Model(&Location{}).Create(fields)
+	result := q.conf.Database.Ctx().
+		Model(&Location{}).
+		Create(fields)
+
 	if result.Error != nil {
 		return status.Error(codes.AlreadyExists, result.Error.Error())
 	}
@@ -186,7 +210,7 @@ func (q *Query) CreateLocation(fields map[string]interface{}) error {
 }
 
 func (q *Query) SaveLocation(location *Location) error {
-	if query := q.dbCtx.Save(location); query.Error != nil {
+	if query := q.conf.Database.Ctx().Save(location); query.Error != nil {
 		return status.Error(codes.Internal, "Aggregate Not Saved >> "+query.Error.Error())
 	}
 

@@ -1,0 +1,14 @@
+# curl --location --request POST 'http://ecooda.local:8080/locations/18cfa45a-42c1-4c92-9918-8c7fafa16cd0/add-country'
+#--header 'Content-Type: application/json'
+#--data-raw '{
+#    "location_uuid": "21bc159b-f71b-4ed4-bb72-f7ab8aff5d4c"
+#}'
+POST http://ecooda.local:8080/locations/18cfa45a-42c1-4c92-9918-8c7fafa16cd0/add-country
+Content-Type: application/json
+
+{
+  "location_uuid": "21bc159b-f71b-4ed4-bb72-f7ab8aff5d4c"
+}
+
+###
+

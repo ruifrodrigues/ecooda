@@ -1,0 +1,14 @@
+# curl --location --request PUT 'http://ecooda.local:8080/locations/c562d436-75bb-46be-a974-986e174160ca'
+#--header 'Content-Type: application/json'
+#--data-raw '{
+#    "name": "Sesimbra"
+#}'
+PUT http://ecooda.local:8080/locations/c562d436-75bb-46be-a974-986e174160ca
+Content-Type: application/json
+
+{
+  "name": "Sesimbra"
+}
+
+###
+

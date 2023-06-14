@@ -17,10 +17,9 @@ type Args struct {
 }
 
 func NewCommandArgs() *Args {
-	args := new(Args)
-	args.value = []Value{}
-
-	return args
+	return &Args{
+		value: []Value{},
+	}
 }
 
 func (arg *Args) Add(value interface{}) *Args {
@@ -42,10 +41,9 @@ type CommandHandler struct {
 }
 
 func NewCommandHandler(conf config.Config) Handler {
-	handler := new(CommandHandler)
-	handler.repository = NewRepository(conf)
-
-	return handler
+	return &CommandHandler{
+		repository: NewRepository(conf),
+	}
 }
 
 func (ch *CommandHandler) Handle(cmd Command) error {
@@ -81,11 +79,10 @@ type AddCategory struct {
 }
 
 func NewAddCategoryCommand(uuid string, args *Args) Command {
-	command := new(AddCategory)
-	command.uuid = uuid
-	command.args = args
-
-	return command
+	return &AddCategory{
+		uuid: uuid,
+		args: args,
+	}
 }
 
 func (ac *AddCategory) GetUuid() string {
@@ -106,11 +103,10 @@ type RemoveCategory struct {
 }
 
 func NewRemoveCategoryCommand(uuid string, args *Args) Command {
-	command := new(RemoveCategory)
-	command.uuid = uuid
-	command.args = args
-
-	return command
+	return &RemoveCategory{
+		uuid: uuid,
+		args: args,
+	}
 }
 
 func (rc *RemoveCategory) GetUuid() string {

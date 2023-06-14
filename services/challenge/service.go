@@ -63,8 +63,9 @@ func NewChallengeService(conf config.Config) *Service {
 		"updated_at",
 	}
 
-	return &Service{
-		conf:   conf,
-		fields: fields,
-	}
+	service := new(Service)
+	service.conf = conf
+	service.fields = fields
+
+	return service
 }

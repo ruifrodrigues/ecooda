@@ -24,14 +24,7 @@ func (s *Service) GetLocationCollection(ctx context.Context, req *pb.GetLocation
 		default:
 			var maxLimit int32 = 25
 
-			dbCtx := s.conf.Database.Ctx()
-
-			query := NewQuery(dbCtx)
-			count := query.CountLocations()
-			cursor, err := api.NewCursor(count, req.GetPage(), req.GetPageSize(), maxLimit)
-			if err != nil {
-				return nil, err
-			}
+			query := NewQuery(s.conf)
 
 			offset := api.Offset(req.GetPage(), req.GetPageSize(), maxLimit)
 			limit := api.Limit(req.GetPageSize(), maxLimit)
@@ -42,12 +35,16 @@ func (s *Service) GetLocationCollection(ctx context.Context, req *pb.GetLocation
 				return nil, err
 			}
 
-			requestedFields := api.RequestedFields(req.GetFields(), s.fields.Location)
-			availableFields := s.fields.Location.Available
+			count := query.CountLocations()
+			cursor := api.NewCursor(count, req.GetPage(), req.GetPageSize(), maxLimit)
 
-			collection := new(pb.GetLocationCollectionResponse)
-			collection.Data = locationFields(dbCtx, records, requestedFields, maxLimit)
-			collection.Meta = api.NewMeta().AddCursor(cursor).AddFields(availableFields).Meta
+			collection := &pb.GetLocationCollectionResponse{}
+
+			fields := api.RequestedFields(req.GetFields(), s.fields.Location)
+			collection.Data = NewData(s.conf, records, fields, maxLimit).Generate()
+
+			fields = s.fields.Location.Available
+			collection.Meta = api.NewMeta().AddCursor(cursor).AddFields(fields).Meta
 
 			_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "200"))
 
@@ -70,9 +67,7 @@ func (s *Service) GetLocationItem(ctx context.Context, req *pb.GetLocationItemRe
 				return nil, err
 			}
 
-			dbCtx := s.conf.Database.Ctx()
-
-			record, err := NewQuery(dbCtx).GetLocationByUuid(uuid, "*")
+			record, err := NewQuery(s.conf).GetLocationByUuid(uuid, "*")
 			if err != nil {
 				return nil, err
 			}
@@ -81,7 +76,7 @@ func (s *Service) GetLocationItem(ctx context.Context, req *pb.GetLocationItemRe
 			availableFields := s.fields.Location.Available
 
 			item := new(pb.GetLocationItemResponse)
-			item.Data = locationFields(dbCtx, []*Location{record}, requestedFields, 1)[0]
+			item.Data = NewData(s.conf, []*Location{record}, requestedFields, 1).Generate()[0]
 			item.Meta = api.NewMeta().AddFields(availableFields).Meta
 
 			_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "200"))
@@ -107,7 +102,7 @@ func (s *Service) GetChallengesFromLocation(ctx context.Context, req *pb.GetChal
 				return nil, err
 			}
 
-			query := NewQuery(s.conf.Database.Ctx())
+			query := NewQuery(s.conf)
 
 			location, err := query.GetLocationByUuid(uuid, "*")
 			if err != nil {
@@ -123,24 +118,21 @@ func (s *Service) GetChallengesFromLocation(ctx context.Context, req *pb.GetChal
 				return nil, err
 			}
 
-			request := new(pb.GetChallengeItemsBatchRequest)
-			request.Uuids = challengeUuids
-
-			optionalFields := new(pb.GetChallengeItemsBatchRequest_Fields)
-			optionalFields.Fields = req.GetFields()
-			request.OptionalFields = optionalFields
-
-			optionalSort := new(pb.GetChallengeItemsBatchRequest_Sort)
-			optionalSort.Sort = req.GetSort()
-			request.OptionalSort = optionalSort
-
-			optionalPageSize := new(pb.GetChallengeItemsBatchRequest_PageSize)
-			optionalPageSize.PageSize = req.GetPageSize()
-			request.OptionalPageSize = optionalPageSize
-
-			optionalPage := new(pb.GetChallengeItemsBatchRequest_Page)
-			optionalPage.Page = req.GetPage()
-			request.OptionalPage = optionalPage
+			request := &pb.GetChallengeItemsBatchRequest{
+				Uuids: challengeUuids,
+				OptionalFields: &pb.GetChallengeItemsBatchRequest_Fields{
+					Fields: req.GetFields(),
+				},
+				OptionalSort: &pb.GetChallengeItemsBatchRequest_Sort{
+					Sort: req.GetSort(),
+				},
+				OptionalPageSize: &pb.GetChallengeItemsBatchRequest_PageSize{
+					PageSize: req.GetPageSize(),
+				},
+				OptionalPage: &pb.GetChallengeItemsBatchRequest_Page{
+					Page: req.GetPage(),
+				},
+			}
 
 			batchResponse, err := NewGrpcClient(s.conf.Values.GrpcPort).GetChallengeItemsBatch(request)
 			if err != nil {
@@ -148,23 +140,15 @@ func (s *Service) GetChallengesFromLocation(ctx context.Context, req *pb.GetChal
 			}
 
 			count := query.CountChallenges(location)
-			cursor, err := api.NewCursor(count, req.GetPage(), req.GetPageSize(), maxLimit)
-			if err != nil {
-				return nil, err
-			}
-
-			availableFields := []string{batchResponse.GetMeta().GetFields()}
-
-			collection := new(pb.GetChallengesFromLocationResponse)
-			collection.Data = batchResponse.Data
-			collection.Meta = api.NewMeta().
-				AddCursor(cursor).
-				AddFields(availableFields).
-				Meta
+			cursor := api.NewCursor(count, req.GetPage(), req.GetPageSize(), maxLimit)
+			fields := []string{batchResponse.GetMeta().GetFields()}
 
 			_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "200"))
 
-			return collection, nil
+			return &pb.GetChallengesFromLocationResponse{
+				Data: batchResponse.Data,
+				Meta: api.NewMeta().AddCursor(cursor).AddFields(fields).Meta,
+			}, nil
 		}
 	}
 }
@@ -188,23 +172,23 @@ func (s *Service) CreateLocation(ctx context.Context, req *pb.CreateLocationRequ
 				"type": req.GetType(),
 			}
 
-			dbCtx := s.conf.Database.Ctx()
+			query := NewQuery(s.conf)
 
 			if req.GetParentUuid() != "" {
-				record, err := NewQuery(dbCtx).GetLocationByUuid(req.GetParentUuid(), "id")
+				record, err := query.GetLocationByUuid(req.GetParentUuid(), "id")
 				if err != nil {
 					return nil, err
 				}
 				fields["parent_id"] = record.ID
 			}
 
-			if err := NewQuery(dbCtx).CreateLocation(fields); err != nil {
+			if err := query.CreateLocation(fields); err != nil {
 				return nil, err
 			}
 
 			_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "201"))
 
-			return new(pb.CreateLocationResponse), nil
+			return &pb.CreateLocationResponse{}, nil
 		}
 	}
 }
@@ -239,7 +223,7 @@ func (s *Service) UpdateLocation(ctx context.Context, req *pb.UpdateLocationRequ
 
 			_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "200"))
 
-			return new(pb.UpdateLocationResponse), nil
+			return &pb.UpdateLocationResponse{}, nil
 		}
 	}
 }
@@ -258,15 +242,13 @@ func (s *Service) DeleteLocation(ctx context.Context, req *pb.DeleteLocationRequ
 				return nil, err
 			}
 
-			dbCtx := s.conf.Database.Ctx()
-
-			if err := NewQuery(dbCtx).DeleteLocation(uuid); err != nil {
+			if err := NewQuery(s.conf).DeleteLocation(uuid); err != nil {
 				return nil, err
 			}
 
 			_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "200"))
 
-			return new(pb.DeleteLocationResponse), nil
+			return &pb.DeleteLocationResponse{}, nil
 		}
 	}
 }
@@ -299,7 +281,7 @@ func (s *Service) AddCountryToLocation(ctx context.Context, req *pb.AddCountryTo
 
 			_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "200"))
 
-			return new(pb.AddCountryToLocationResponse), nil
+			return &pb.AddCountryToLocationResponse{}, nil
 		}
 	}
 }
@@ -332,7 +314,7 @@ func (s *Service) AddRegionToLocation(ctx context.Context, req *pb.AddRegionToLo
 
 			_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "200"))
 
-			return new(pb.AddRegionToLocationResponse), nil
+			return &pb.AddRegionToLocationResponse{}, nil
 		}
 	}
 }
@@ -365,7 +347,7 @@ func (s *Service) RemoveCountryFromLocation(ctx context.Context, req *pb.RemoveC
 
 			_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "200"))
 
-			return new(pb.RemoveCountryFromLocationResponse), nil
+			return &pb.RemoveCountryFromLocationResponse{}, nil
 		}
 	}
 }
@@ -398,7 +380,7 @@ func (s *Service) RemoveRegionFromLocation(ctx context.Context, req *pb.RemoveRe
 
 			_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "200"))
 
-			return new(pb.RemoveRegionFromLocationResponse), nil
+			return &pb.RemoveRegionFromLocationResponse{}, nil
 		}
 	}
 }
@@ -431,7 +413,7 @@ func (s *Service) AddChallengeToLocation(ctx context.Context, req *pb.AddChallen
 
 			_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "200"))
 
-			return new(pb.AddChallengeToLocationResponse), nil
+			return &pb.AddChallengeToLocationResponse{}, nil
 		}
 	}
 }
@@ -464,7 +446,7 @@ func (s *Service) RemoveChallengeFromLocation(ctx context.Context, req *pb.Remov
 
 			_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "200"))
 
-			return new(pb.RemoveChallengeFromLocationResponse), nil
+			return &pb.RemoveChallengeFromLocationResponse{}, nil
 		}
 	}
 }

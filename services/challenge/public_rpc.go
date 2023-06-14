@@ -25,30 +25,26 @@ func (s *Service) GetChallengeCollection(ctx context.Context, req *pb.GetChallen
 			var maxLimit int32 = 25
 			var records []*Challenge
 
-			dbCtx := s.conf.Database.Ctx()
-
-			query := NewQuery(dbCtx)
-			count := query.CountChallenges()
-			cursor, err := api.NewCursor(count, req.GetPage(), req.GetPageSize(), maxLimit)
-			if err != nil {
-				return nil, err
-			}
-
+			query := NewQuery(s.conf)
 			offset := api.Offset(req.GetPage(), req.GetPageSize(), maxLimit)
 			limit := api.Limit(req.GetPageSize(), maxLimit)
 			order := api.Sort(req.GetSort(), allowedSorts)
 
-			records, err = query.GetChallenges(offset, limit, order, nil)
+			records, err := query.GetChallenges(offset, limit, order, nil)
 			if err != nil {
 				return nil, err
 			}
 
-			requestedFields := api.RequestedFields(req.GetFields(), s.fields.Challenge)
-			availableFields := s.fields.Challenge.Available
+			count := query.CountChallenges()
+			cursor := api.NewCursor(count, req.GetPage(), req.GetPageSize(), maxLimit)
 
-			collection := new(pb.GetChallengeCollectionResponse)
-			collection.Data = challengeFields(records, requestedFields, maxLimit)
-			collection.Meta = api.NewMeta().AddCursor(cursor).AddFields(availableFields).Meta
+			collection := &pb.GetChallengeCollectionResponse{}
+
+			fields := api.RequestedFields(req.GetFields(), s.fields.Challenge)
+			collection.Data = NewChallengeData(s.conf, records, fields, maxLimit).Generate()
+
+			fields = s.fields.Challenge.Available
+			collection.Meta = api.NewMeta().AddCursor(cursor).AddFields(fields).Meta
 
 			_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "200"))
 
@@ -71,19 +67,18 @@ func (s *Service) GetChallengeItem(ctx context.Context, req *pb.GetChallengeItem
 				return nil, err
 			}
 
-			dbCtx := s.conf.Database.Ctx()
-
-			record, err := NewQuery(dbCtx).GetChallengeByUuid(uuid)
+			record, err := NewQuery(s.conf).GetChallengeByUuid(uuid)
 			if err != nil {
 				return nil, err
 			}
 
-			requestedFields := api.RequestedFields(req.GetFields(), s.fields.Challenge)
-			availableFields := s.fields.Challenge.Available
+			item := &pb.GetChallengeItemResponse{}
 
-			item := new(pb.GetChallengeItemResponse)
-			item.Data = challengeFields([]*Challenge{record}, requestedFields, 1)[0]
-			item.Meta = api.NewMeta().AddFields(availableFields).Meta
+			fields := api.RequestedFields(req.GetFields(), s.fields.Challenge)
+			item.Data = NewChallengeData(s.conf, []*Challenge{record}, fields, 1).Generate()[0]
+
+			fields = s.fields.Challenge.Available
+			item.Meta = api.NewMeta().AddFields(fields).Meta
 
 			_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "200"))
 
@@ -138,14 +133,13 @@ func (s *Service) CreateChallenge(ctx context.Context, req *pb.CreateChallengeRe
 				fields["gallery"] = req.GetGallery()
 			}
 
-			dbCtx := s.conf.Database.Ctx()
-			if err := NewQuery(dbCtx).CreateChallenge(fields); err != nil {
+			if err := NewQuery(s.conf).CreateChallenge(fields); err != nil {
 				return nil, err
 			}
 
 			_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "201"))
 
-			return new(pb.CreateChallengeResponse), nil
+			return &pb.CreateChallengeResponse{}, nil
 		}
 	}
 }
@@ -189,7 +183,7 @@ func (s *Service) UpdateChallenge(ctx context.Context, req *pb.UpdateChallengeRe
 
 			_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "200"))
 
-			return new(pb.UpdateChallengeResponse), nil
+			return &pb.UpdateChallengeResponse{}, nil
 		}
 	}
 }
@@ -208,15 +202,13 @@ func (s *Service) DeleteChallenge(ctx context.Context, req *pb.DeleteChallengeRe
 				return nil, err
 			}
 
-			dbCtx := s.conf.Database.Ctx()
-
-			if err := NewQuery(dbCtx).DeleteChallenge(uuid); err != nil {
+			if err := NewQuery(s.conf).DeleteChallenge(uuid); err != nil {
 				return nil, err
 			}
 
 			_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "200"))
 
-			return new(pb.DeleteChallengeResponse), nil
+			return &pb.DeleteChallengeResponse{}, nil
 		}
 	}
 }
@@ -249,7 +241,7 @@ func (s *Service) AddCategoryToChallenge(ctx context.Context, req *pb.AddCategor
 
 			_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "200"))
 
-			return new(pb.AddCategoryToChallengeResponse), nil
+			return &pb.AddCategoryToChallengeResponse{}, nil
 		}
 	}
 }
@@ -282,7 +274,7 @@ func (s *Service) RemoveCategoryFromChallenge(ctx context.Context, req *pb.Remov
 
 			_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "200"))
 
-			return new(pb.RemoveCategoryFromChallengeResponse), nil
+			return &pb.RemoveCategoryFromChallengeResponse{}, nil
 		}
 	}
 }
@@ -299,30 +291,27 @@ func (s *Service) GetCategoryCollection(ctx context.Context, req *pb.GetCategory
 			var maxLimit int32 = 25
 			var records []*Category
 
-			dbCtx := s.conf.Database.Ctx()
-
-			query := NewQuery(dbCtx)
-			count := query.CountCategories()
-			cursor, err := api.NewCursor(count, req.GetPage(), req.GetPageSize(), maxLimit)
-			if err != nil {
-				return nil, err
-			}
+			query := NewQuery(s.conf)
 
 			offset := api.Offset(req.GetPage(), req.GetPageSize(), maxLimit)
 			limit := api.Limit(req.GetPageSize(), maxLimit)
 			order := api.Sort(req.GetSort(), allowedSorts)
 
-			records, err = query.GetCategories(offset, limit, order)
+			records, err := query.GetCategories(offset, limit, order)
 			if err != nil {
 				return nil, err
 			}
 
-			requestedFields := api.RequestedFields(req.GetFields(), s.fields.Challenge)
-			availableFields := s.fields.Category.Available
+			collection := &pb.GetCategoryCollectionResponse{}
 
-			collection := new(pb.GetCategoryCollectionResponse)
-			collection.Data = categoryFields(records, requestedFields, maxLimit)
-			collection.Meta = api.NewMeta().AddCursor(cursor).AddFields(availableFields).Meta
+			fields := api.RequestedFields(req.GetFields(), s.fields.Category)
+			collection.Data = NewCategoryData(s.conf, records, fields, maxLimit).Generate()
+
+			count := query.CountCategories()
+			cursor := api.NewCursor(count, req.GetPage(), req.GetPageSize(), maxLimit)
+
+			fields = s.fields.Category.Available
+			collection.Meta = api.NewMeta().AddCursor(cursor).AddFields(fields).Meta
 
 			_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "200"))
 
@@ -345,18 +334,18 @@ func (s *Service) GetCategoryItem(ctx context.Context, req *pb.GetCategoryItemRe
 				return nil, err
 			}
 
-			dbCtx := s.conf.Database.Ctx()
-			record, err := NewQuery(dbCtx).GetCategoryByUuid(uuid)
+			record, err := NewQuery(s.conf).GetCategoryByUuid(uuid)
 			if err != nil {
 				return nil, err
 			}
 
-			requestedFields := api.RequestedFields(req.GetFields(), s.fields.Category)
-			availableFields := s.fields.Category.Available
+			item := &pb.GetCategoryItemResponse{}
 
-			item := new(pb.GetCategoryItemResponse)
-			item.Data = categoryFields([]*Category{record}, requestedFields, 1)[0]
-			item.Meta = api.NewMeta().AddFields(availableFields).Meta
+			fields := api.RequestedFields(req.GetFields(), s.fields.Category)
+			item.Data = NewCategoryData(s.conf, []*Category{record}, fields, 1).Generate()[0]
+
+			fields = s.fields.Category.Available
+			item.Meta = api.NewMeta().AddFields(fields).Meta
 
 			_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "200"))
 
@@ -383,14 +372,13 @@ func (s *Service) CreateCategory(ctx context.Context, req *pb.CreateCategoryRequ
 			fields["uuid"] = _uuid.New()
 			fields["name"] = req.GetName()
 
-			dbCtx := s.conf.Database.Ctx()
-			if err := NewQuery(dbCtx).CreateCategory(fields); err != nil {
+			if err := NewQuery(s.conf).CreateCategory(fields); err != nil {
 				return nil, err
 			}
 
 			_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "201"))
 
-			return new(pb.CreateCategoryResponse), nil
+			return &pb.CreateCategoryResponse{}, nil
 		}
 	}
 }
@@ -415,14 +403,13 @@ func (s *Service) UpdateCategory(ctx context.Context, req *pb.UpdateCategoryRequ
 
 			var fields = map[string]interface{}{"name": req.GetName()}
 
-			dbCtx := s.conf.Database.Ctx()
-			if err := NewQuery(dbCtx).UpdateCategory(uuid, fields); err != nil {
+			if err := NewQuery(s.conf).UpdateCategory(uuid, fields); err != nil {
 				return nil, err
 			}
 
 			_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "200"))
 
-			return new(pb.UpdateCategoryResponse), nil
+			return &pb.UpdateCategoryResponse{}, nil
 		}
 	}
 }
@@ -441,14 +428,13 @@ func (s *Service) DeleteCategory(ctx context.Context, req *pb.DeleteCategoryRequ
 				return nil, err
 			}
 
-			dbCtx := s.conf.Database.Ctx()
-			if err := NewQuery(dbCtx).DeleteCategory(uuid); err != nil {
+			if err := NewQuery(s.conf).DeleteCategory(uuid); err != nil {
 				return nil, err
 			}
 
 			_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "200"))
 
-			return new(pb.DeleteCategoryResponse), nil
+			return &pb.DeleteCategoryResponse{}, nil
 		}
 	}
 }

@@ -1,0 +1,14 @@
+# curl --location --request PUT 'http://ecooda.local:8080/challenges/36bb6b4f-cf0d-419a-8150-2722ecbd463a'
+#--header 'Content-Type: application/json'
+#--data-raw '{
+#    "name": "Museu Colecção Berardo"
+#}'
+PUT http://ecooda.local:8080/challenges/36bb6b4f-cf0d-419a-8150-2722ecbd463a
+Content-Type: application/json
+
+{
+  "name": "Museu Colecção Berardo"
+}
+
+###
+

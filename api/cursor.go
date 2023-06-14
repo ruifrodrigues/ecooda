@@ -9,7 +9,7 @@ type Cursor struct {
 	*pb.Cursor
 }
 
-func NewCursor(count, page, pageSize, maxLimit int32) (*Cursor, error) {
+func NewCursor(count, page, pageSize, maxLimit int32) *Cursor {
 	cursor := &Cursor{
 		&pb.Cursor{},
 	}
@@ -19,7 +19,7 @@ func NewCursor(count, page, pageSize, maxLimit int32) (*Cursor, error) {
 	cursor.Current = generateCurrent(page)
 	cursor.Next = generateNext(cursor.Count, cursor.Current, pageSize, maxLimit)
 
-	return cursor, nil
+	return cursor
 }
 
 func generatePrevious(page int32) int32 {

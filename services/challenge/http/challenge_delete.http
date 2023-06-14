@@ -1,0 +1,14 @@
+# curl --location --request DELETE 'http://ecooda.local:8080/challenges/32723e75-e868-4543-b43e-3fad8c92359e'
+#--header 'Content-Type: application/json'
+#--data-raw '{
+#    "name": "Museu Colecção Berardo"
+#}'
+DELETE http://ecooda.local:8080/challenges/32723e75-e868-4543-b43e-3fad8c92359e
+Content-Type: application/json
+
+{
+  "name": "Museu Colecção Berardo"
+}
+
+###
+

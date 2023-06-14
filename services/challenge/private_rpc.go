@@ -24,8 +24,6 @@ func (s *Service) GetChallengeItemsBatch(ctx context.Context, req *pb.GetChallen
 			var maxLimit int32 = 25
 			var records []*Challenge
 
-			dbCtx := s.conf.Database.Ctx()
-
 			uuids := req.GetUuids()
 			for _, uuid := range uuids {
 				if err := utils.ValidateUuid(uuid); err != nil {
@@ -33,27 +31,25 @@ func (s *Service) GetChallengeItemsBatch(ctx context.Context, req *pb.GetChallen
 				}
 			}
 
-			count := int32(len(req.GetUuids()))
-			cursor, err := api.NewCursor(count, req.GetPage(), req.GetPageSize(), maxLimit)
-			if err != nil {
-				return nil, err
-			}
-
 			offset := api.Offset(req.GetPage(), req.GetPageSize(), maxLimit)
 			limit := api.Limit(req.GetPageSize(), maxLimit)
 			order := api.Sort(req.GetSort(), allowedSorts)
 
-			records, err = NewQuery(dbCtx).GetChallenges(offset, limit, order, uuids)
+			records, err := NewQuery(s.conf).GetChallenges(offset, limit, order, uuids)
 			if err != nil {
 				return nil, err
 			}
 
-			requestedFields := api.RequestedFields(req.GetFields(), s.fields.Challenge)
-			availableFields := s.fields.Challenge.Available
+			count := int32(len(req.GetUuids()))
+			cursor := api.NewCursor(count, req.GetPage(), req.GetPageSize(), maxLimit)
 
-			collection := new(pb.GetChallengeItemsBatchResponse)
-			collection.Data = challengeFields(records, requestedFields, maxLimit)
-			collection.Meta = api.NewMeta().AddCursor(cursor).AddFields(availableFields).Meta
+			collection := &pb.GetChallengeItemsBatchResponse{}
+
+			fields := api.RequestedFields(req.GetFields(), s.fields.Challenge)
+			collection.Data = NewChallengeData(s.conf, records, fields, maxLimit).Generate()
+
+			fields = s.fields.Challenge.Available
+			collection.Meta = api.NewMeta().AddCursor(cursor).AddFields(fields).Meta
 
 			_ = grpc.SetHeader(ctx, metadata.Pairs("x-http-code", "200"))
 
